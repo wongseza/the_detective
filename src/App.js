@@ -22,7 +22,6 @@ function writeData(userId, name, email) {
   });
 }
 
-
 var App = React.createClass({
   getInitialState: function() {
     return {
@@ -70,7 +69,7 @@ var App = React.createClass({
           User count: {this.state.count}<br/>
           JSON: {this.state.json}
         </p>
-        <input type="button" onClick={this.clickButtonRemoveLast.bind(this)} value="Remove last" />
+        <input type="button" onClick={this.clickButtonRemoveLast} value="Remove last" />
       </div>
     );
   }
