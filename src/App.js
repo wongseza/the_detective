@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import logo from './logo.svg';
 import './App.css';
+import WaitRoom from './WaitRoom';
 
 var firebase = require("firebase");
 var config = {
@@ -48,13 +50,18 @@ var App = React.createClass({
   },
 
   componentWillUnmount: function() {
-    this.firebaseRef.off();
+    this.firebase.off();
   },
 
   clickButtonRemoveLast: function(e) {
     var length = Object.keys(this.state.items).length;
     var usersRef = firebase.database().ref('users/' + Object.keys(this.state.items)[length - 1]);
     usersRef.remove();
+  },
+
+  clickWaitRoom: function(e) {
+    console.log('click button to wait room');
+    return ReactDOM.render(<WaitRoom />,document.getElementById('root'));
   },
 
   render: function() {
@@ -70,6 +77,7 @@ var App = React.createClass({
           JSON: {this.state.json}
         </p>
         <input type="button" onClick={this.clickButtonRemoveLast} value="Remove last" />
+        <input type="button" onClick={this.clickWaitRoom} value="To WaitRoom" />
       </div>
     );
   }
