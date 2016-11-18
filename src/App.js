@@ -4,6 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 import WaitRoom from './WaitRoom';
 import EndGame from './EndGame';
+import AppLogin from './AppLogin';
 
 var firebase = require("firebase");
 var config = {
@@ -50,9 +51,9 @@ var App = React.createClass({
     }.bind(this));
   },
 
-  componentWillUnmount: function() {
-    this.firebase.off();
-  },
+//  componentWillUnmount: function() {
+//    this.firebase.off();
+//  },
 
   clickButtonRemoveLast: function(e) {
     var length = Object.keys(this.state.items).length;
@@ -68,6 +69,11 @@ var App = React.createClass({
   clickEndGame: function(e) {
     console.log('click button to end game');
     return ReactDOM.render(<EndGame />,document.getElementById('root'));
+  },
+  
+  clickToLogin: function(e) {
+    console.log('click button to log in page');
+    return ReactDOM.render(<AppLogin />,document.getElementById('root'));
   },
 
   render: function() {
@@ -85,6 +91,7 @@ var App = React.createClass({
         <input type="button" onClick={this.clickButtonRemoveLast} value="Remove last" />
         <input type="button" onClick={this.clickWaitRoom} value="To WaitRoom" />
         <input type="button" onClick={this.clickEndGame} value="To EndGame" />
+        <input type="button" onClick={this.clickToLogin} value="To Login" />
       </div>
     );
   }

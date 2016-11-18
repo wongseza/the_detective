@@ -10,7 +10,7 @@ var config = {
     storageBucket: "the-detective.appspot.com",
     messagingSenderId: "551652425284"
   };
-  firebase.initializeApp(config);
+  firebase.initializeApp(config, "AppLogin");
 
 var AppLogin = React.createClass({
 
