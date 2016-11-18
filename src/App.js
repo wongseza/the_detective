@@ -68,7 +68,7 @@ var App = React.createClass({
 
   clickEndGame: function(e) {
     console.log('click button to end game');
-    return ReactDOM.render(<EndGame />,document.getElementById('root'));
+    return ReactDOM.render(<EndGame userId='14 34 48' gameId='-KWq-fZKpb-a4lLvug8T' />,document.getElementById('root'));
   },
   
   clickToLogin: function(e) {
