@@ -5,6 +5,7 @@ import './App.css';
 import WaitRoom from './WaitRoom';
 import EndGame from './EndGame';
 import AppLogin from './AppLogin';
+import Lobby from './Lobby';
 
 var firebase = require("firebase");
 var config = {
@@ -79,6 +80,11 @@ var App = React.createClass({
     return ReactDOM.render(<AppLogin />,document.getElementById('root'));
   },
 
+  clickLobby: function(e) {
+    console.log('click button to wait room');
+    return ReactDOM.render(<Lobby userId="16 37 4"/>,document.getElementById('root'));
+  },
+
   render: function() {
     return (
       <div className="App">
@@ -95,6 +101,7 @@ var App = React.createClass({
         <input type="button" onClick={this.clickWaitRoom} value="To WaitRoom" />
         <input type="button" onClick={this.clickEndGame} value="To EndGame" />
         <input type="button" onClick={this.clickToLogin} value="To Login" />
+        <input type="button" onClick={this.clickLobby} value="To Lobby" />
       </div>
     );
   }

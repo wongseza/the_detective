@@ -32,7 +32,6 @@ var Lobby = React.createClass({
     var usersRef = firebase.database().ref('users/' + this.props.userId);
     usersRef.once('value', function(snapshot) {
       var value = snapshot.val();
-      alert(value.email);
       this.setState({
         userEmail: value.email
       });
