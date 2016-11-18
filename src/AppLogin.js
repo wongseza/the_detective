@@ -45,6 +45,7 @@ var AppLogin = React.createClass({
     if (user != null) {
         var uid = user.uid;
         var displayName = user.displayName;
+        email = user.email;
         usersRef = firebase.database().ref('users/' + uid);
         usersRef.set({
             username: displayName,
