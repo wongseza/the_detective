@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import logo from './logo.svg';
 import './App.css';
@@ -15,6 +15,8 @@ var config = {
   messagingSenderId: "551652425284"
 };
 firebase.initializeApp(config);
+
+var usersRef = firebase.database().ref('users/');
 
 // Get a reference to the database service
 
@@ -40,7 +42,7 @@ var App = React.createClass({
     var value = 0;
     writeData('' + currentTime.getHours() + ' ' + currentTime.getMinutes() + ' ' + currentTime.getSeconds(), 'aaaa', 'bbbbb');
 
-    var usersRef = firebase.database().ref('users/');
+    // usersRef = firebase.database().ref('users/');
     usersRef.on('value', function(snapshot) {
       value = snapshot.val();
       this.setState({
@@ -51,9 +53,10 @@ var App = React.createClass({
     }.bind(this));
   },
 
-//  componentWillUnmount: function() {
-//    this.firebase.off();
-//  },
+  componentWillUnmount: function() {
+    console.log('Unmounting firebase "users/"');
+    usersRef.off();
+  },
 
   clickButtonRemoveLast: function(e) {
     var length = Object.keys(this.state.items).length;
@@ -63,17 +66,7 @@ var App = React.createClass({
 
   clickWaitRoom: function(e) {
     console.log('click button to wait room');
-    return ReactDOM.render(<WaitRoom />,document.getElementById('root'));
-  },
-
-  clickEndGame: function(e) {
-    console.log('click button to end game');
-    return ReactDOM.render(<EndGame userId='14 34 48' gameId='-KWq-fZKpb-a4lLvug8T' />,document.getElementById('root'));
-  },
-  
-  clickToLogin: function(e) {
-    console.log('click button to log in page');
-    return ReactDOM.render(<AppLogin />,document.getElementById('root'));
+    return ReactDOM.render(<WaitRoom userId="Jane" gameId="Room1"/>,document.getElementById('root'));
   },
 
   render: function() {
