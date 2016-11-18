@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './App.css';
+import Lobby from './Lobby';
 
 var firebase = require("firebase");
 var config = {
@@ -51,7 +52,7 @@ var AppLogin = React.createClass({
             username: displayName,
             email: email,
         });
-        ReactDOM.render(<p>Lobby</p>, document.getElementById('root'))
+        ReactDOM.render(<Lobby />, document.getElementById('root'))
     }
     
   },
