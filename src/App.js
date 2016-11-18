@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import logo from './logo.svg';
 import './App.css';
 import WaitRoom from './WaitRoom';
+import EndGame from './EndGame';
 
 var firebase = require("firebase");
 var config = {
@@ -64,6 +65,11 @@ var App = React.createClass({
     return ReactDOM.render(<WaitRoom />,document.getElementById('root'));
   },
 
+  clickEndGame: function(e) {
+    console.log('click button to end game');
+    return ReactDOM.render(<EndGame />,document.getElementById('root'));
+  },
+
   render: function() {
     return (
       <div className="App">
@@ -78,6 +84,7 @@ var App = React.createClass({
         </p>
         <input type="button" onClick={this.clickButtonRemoveLast} value="Remove last" />
         <input type="button" onClick={this.clickWaitRoom} value="To WaitRoom" />
+        <input type="button" onClick={this.clickEndGame} value="To EndGame" />
       </div>
     );
   }

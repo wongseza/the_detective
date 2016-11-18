@@ -22,3 +22,22 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.EndGame {
+  text-align: center;
+}
+
+.EndGame-logo {
+  height: 200px;
+}
+
+.EndGame-header {
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.EndGame-intro {
+  font-size: large;
+}
+
