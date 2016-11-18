@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import './App.css';
 
 var firebase = require("firebase");
@@ -13,17 +14,10 @@ var config = {
 
 var AppLogin = React.createClass({
 
-  getInitialState: function() {
-    firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-            window.location.href = "lobby.html";
-        } else {
-            return this.render();
-        }
-    });
-  },
-
   clickButtonLogin: function(e) {
+    var auth = firebase.auth();
+    auth.signOut()
+    
     // Get elements
     var txtEmail = document.getElementById('txtEmail');
     var txtPassword = document.getElementById('txtPassword');
@@ -31,14 +25,15 @@ var AppLogin = React.createClass({
     // Get email and password
     var email = txtEmail.value;
     var password = txtPassword.value;
-    var auth = firebase.auth();
+    
     // Sign in
     var promise = auth.signInWithEmailAndPassword(email, password);
     promise.catch(e => alert(e.message));
-
-    auth.onAuthStateChanged(function(user) {
+    
+    firebase.auth().onAuthStateChanged(function(user) {
+        console.log(user);
         if (user) {
-            window.location.href = "lobby.html";
+            ReactDOM.render(<p>Lobby</p>, document.getElementById('root'))
         }
     });
   },
@@ -54,7 +49,7 @@ var AppLogin = React.createClass({
     var auth = firebase.auth();
     // Sign in
     var promise = auth.createUserWithEmailAndPassword(email, password);
-    promise.catch(e => console.log(e.message));
+    promise.catch(e => alert(e.message));
   },
 
   render: function() {
@@ -68,7 +63,7 @@ var AppLogin = React.createClass({
             <input type="button" onClick={this.clickButtonSignup} value="Sign up" />
             
         </div>
-    );
+        );
   }
 });
 
