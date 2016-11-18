@@ -67,7 +67,7 @@ var App = React.createClass({
 
   clickWaitRoom: function(e) {
     console.log('click button to wait room');
-    return ReactDOM.render(<WaitRoom userId="Jane" gameId="Room1"/>,document.getElementById('root'));
+    return ReactDOM.render(<WaitRoom userId="14 34 48" gameId="-KWq-fZKpb-a4lLvug8T"/>,document.getElementById('root'));
   },
 
   clickEndGame: function(e) {
