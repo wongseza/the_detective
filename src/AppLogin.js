@@ -16,6 +16,17 @@ var AppLogin = React.createClass({
 
   clickButtonLogin: function(e) {
     var auth = firebase.auth();
+    var usersRef;
+    
+    // Clear Old User State
+    var oldUser = auth.currentUser;
+    if (oldUser != null) {
+        var oldUid = oldUser.uid;
+        usersRef = firebase.database().ref('users/' + oldUid);
+        usersRef.remove();
+    }
+    
+    // Force signout
     auth.signOut()
     
     // Get elements
@@ -30,12 +41,18 @@ var AppLogin = React.createClass({
     var promise = auth.signInWithEmailAndPassword(email, password);
     promise.catch(e => alert(e.message));
     
-    firebase.auth().onAuthStateChanged(function(user) {
-        console.log(user);
-        if (user) {
-            ReactDOM.render(<p>Lobby</p>, document.getElementById('root'))
-        }
-    });
+    var user = auth.currentUser;
+    if (user != null) {
+        var uid = user.uid;
+        var displayName = user.displayName;
+        usersRef = firebase.database().ref('users/' + uid);
+        usersRef.set({
+            username: displayName,
+            email: email,
+        });
+        ReactDOM.render(<p>Lobby</p>, document.getElementById('root'))
+    }
+    
   },
   
   clickButtonSignup: function(e) {
