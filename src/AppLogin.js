@@ -17,6 +17,8 @@ var AppLogin = React.createClass({
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
             window.location.href = "lobby.html";
+        } else {
+            return this.render();
         }
     });
   },
