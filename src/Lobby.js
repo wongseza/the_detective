@@ -11,7 +11,7 @@ var config = {
   storageBucket: "the-detective.appspot.com",
   messagingSenderId: "551652425284"
 };
-var firebaseRef = firebase.initializeApp(config);
+var firebaseRef = firebase.initializeApp(config, 'lobby');
 
 var Lobby = React.createClass({
   getInitialState: function() {
