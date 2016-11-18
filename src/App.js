@@ -69,6 +69,16 @@ var App = React.createClass({
     return ReactDOM.render(<WaitRoom userId="Jane" gameId="Room1"/>,document.getElementById('root'));
   },
 
+  clickEndGame: function(e) {
+    console.log('click button to end game');
+    return ReactDOM.render(<EndGame userId='14 34 48' gameId='-KWq-fZKpb-a4lLvug8T' />,document.getElementById('root'));
+  },
+  
+  clickToLogin: function(e) {
+    console.log('click button to log in page');
+    return ReactDOM.render(<AppLogin />,document.getElementById('root'));
+  },
+
   render: function() {
     return (
       <div className="App">
