@@ -6,13 +6,34 @@
   height: 100%;
 }
 
-.Tile-logo {
-  height: 100%;
+table {
+  border-spacing: 0px;
 }
 
-.Suspect-logo {
-  position:absolute;
-  top: 70px;
-  left: 100px;
-  z-index: 3;
+td {
+  padding: 0;
+  margin: 0;
+  border-width: 0px;
+  height: 180px;
+  width: 180px;
+}
+
+.Cell {
+  position: relative;
+}
+
+.Cell img {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 1;
+}
+
+.Cell .Suspect-pos {
+  position: absolute;
+  top: 60px;
+  left: 60px;
+  height: 60px;
+  width: 60px;
+  z-index: 2;
 }

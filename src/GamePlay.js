@@ -3,6 +3,7 @@ import tileA from './TileA.png';
 import tileB from './TileB.png';
 import tileC from './TileC.png';
 import tileD from './TileD.png';
+import suspectA from './SuspectA.png';
 import './GamePlay.css';
 
 var firebase = require("firebase");
@@ -96,30 +97,80 @@ var GamePlay = React.createClass({
   render: function() {
     return (
       <div className="Board">
-        <div className="Board-alignment">
-          <img src={this.state.tile0} className="Tile-logo" alt="logo" onClick={this.clickTile0}/>
-          <img src={tileA} className="Tile-logo" alt="logo"  />
-          <img src={tileA} className="Tile-logo" alt="logo" />
-          <img src={tileA} className="Tile-logo" alt="logo" />
-        </div>
-        <div className="Board-alignment">
-          <img src={tileB} className="Tile-logo" alt="logo" />
-          <img src={tileA} className="Tile-logo" alt="logo" />
-          <img src={tileA} className="Tile-logo" alt="logo" />
-          <img src={tileA} className="Tile-logo" alt="logo" />
-        </div>
-        <div className="Board-alignment">
-          <img src={tileA} className="Tile-logo" alt="logo" />
-          <img src={tileB} className="Tile-logo" alt="logo" />
-          <img src={tileB} className="Tile-logo" alt="logo" />
-          <img src={tileB} className="Tile-logo" alt="logo" />
-        </div>
-        <div className="Board-alignment">
-          <img src={tileB} className="Tile-logo" alt="logo" />
-          <img src={tileB} className="Tile-logo" alt="logo" />
-          <img src={tileD} className="Tile-logo" alt="logo" />
-          <img src={tileC} className="Tile-logo" alt="logo" />
-        </div>
+        <table>
+          <tr>
+            <td className="Cell">
+              <img src={this.state.tile0} alt="logo" onClick={this.clickTile0}/>
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+            <td className="Cell">
+              <img src={tileA} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+            <td className="Cell">
+              <img src={tileA} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+            <td className="Cell">
+              <img src={tileA} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+          </tr>
+          <tr>
+            <td className="Cell">
+              <img src={tileB} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+            <td className="Cell">
+              <img src={tileB} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+            <td className="Cell">
+              <img src={tileB} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+            <td className="Cell">
+              <img src={tileB} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+          </tr>
+          <tr>
+            <td className="Cell">
+              <img src={tileB} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+            <td className="Cell">
+              <img src={tileB} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+            <td className="Cell">
+              <img src={tileB} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+            <td className="Cell">
+              <img src={tileB} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+          </tr>
+          <tr>
+            <td className="Cell">
+              <img src={tileB} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+            <td className="Cell">
+              <img src={tileB} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+            <td className="Cell">
+              <img src={tileB} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+            <td className="Cell">
+              <img src={tileB} alt="logo" />
+              <img src={suspectA} className="Suspect-pos" alt="logo" />
+            </td>
+          </tr>
+        </table>
       </div>
     );
   }
