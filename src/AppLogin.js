@@ -73,14 +73,24 @@ var AppLogin = React.createClass({
 
   render: function() {
     return (
-        <div className="AppLogin">
-            <input id="txtEmail" type="email" placeholder="Email"/>
-            
-            <input id="txtPassword" type="password" placeholder="Password"/>
-            
-            <input type="button" onClick={this.clickButtonLogin} value="Log in" />
-            <input type="button" onClick={this.clickButtonSignup} value="Sign up" />
-            
+        <div className="App">
+            <table className="App-login">
+                <tr>
+                    <td className="App-login-header">Email : </td>
+                    <td><input id="txtEmail" type="email" placeholder="Email"/></td>
+                </tr>
+                <tr>
+                    <td className="App-login-header">Password : </td>
+                    <td><input id="txtPassword" type="password" placeholder="Password"/></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input className="App-login-button" type="button" onClick={this.clickButtonLogin} value="Log in" />
+                        <input className="App-login-button" type="button" onClick={this.clickButtonSignup} value="Sign up" />
+                    </td>
+                </tr>
+            </table>
         </div>
         );
   }
