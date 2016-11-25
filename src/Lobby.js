@@ -3,6 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 import WaitRoom from './WaitRoom';
 
+var ReactDOM = require('react-dom');
+var Modal = require('react-modal');
 var firebase = require("firebase");
 var config = {
   apiKey: "AIzaSyDcPiRj8GoAflVFP8aOCMY4UUYWHRoRmkE",
@@ -20,7 +22,8 @@ var Lobby = React.createClass({
       gameTable: "",
       goToWaitRoom: false,
       userEmail: null,
-      gameId: null
+      gameId: null,
+      modalIsOpen: false
     };
   },
 
@@ -43,14 +46,13 @@ var Lobby = React.createClass({
       var rows = [];
       var table = 
         <div>
-          <table className="game-table">
+          <table className="lobby-table">
             <thead>
-              <tr className="game-table">
-                <th className="game-table">No.</th>
-                <th className="game-table">Name</th>
-                <th className="game-table">Player</th>
-                <th className="game-table">Join</th>
-                <th className="game-table">Key</th>
+              <tr className="lobby-table-header">
+                <th className="lobby-table-header">No.</th>
+                <th className="lobby-table-header">Name</th>
+                <th className="lobby-table-header">Player</th>
+                <th className="lobby-table-header">Join</th>
               </tr>
             </thead>
             <tbody>
@@ -65,16 +67,15 @@ var Lobby = React.createClass({
       for(var i = 0 ; i < keyList.length ; i++)
       {
         var game = value[keyList[i]];
-        if (game.status == "waiting")
+        if (game.status === "waiting")
         {
           j++;
           rows.push(
-            <tr className="game-table">
-              <td className="game-table">{j}.</td>
-              <td className="game-table">{game.name}</td>
-              <td className="game-table">1/2</td>
-              <td className="game-table"><input type="button" value="Join" onClick={this.joinGame.bind(this, keyList[i])} /></td>
-              <td className="game-table">{keyList[i]}</td>
+            <tr className="lobby-table">
+              <td className="lobby-narrow-column">{j}.</td>
+              <td className="lobby-wide-column">{game.name}</td>
+              <td className="lobby-narrow-column">1/2</td>
+              <td className="lobby-narrow-column"><input type="button" value="Join" className="lobby-button" onClick={this.joinGame.bind(this, keyList[i])} /></td>
             </tr>
           );
         }
@@ -91,7 +92,7 @@ var Lobby = React.createClass({
     var gamesRef = firebase.database().ref('games/' + key);
     gamesRef.once('value', function(snapshot) {
       var value = snapshot.val();
-      if (value.status == "waiting")
+      if (value.status === "waiting")
       {
         var statusRef = firebase.database().ref('games/' + key + '/status');
         statusRef.set("full");
@@ -114,11 +115,11 @@ var Lobby = React.createClass({
     this.firebaseRef.off();
   },
 
-  closeModal: function() {
+  /*closeModal: function() {
     var modal = document.getElementById('myModal');
     if (modal != null)
       modal.style.display = "none";
-  },
+  },*/
 
   createGameInFirebase: function(){
     var gamesRef = firebase.database().ref('games/');
@@ -143,7 +144,6 @@ var Lobby = React.createClass({
 
   createNewGame: function(e) {
     this.setState({
-      createNewRoom: true,
       modal: 
         <div id="myModal" className="modal">
           <div className="modal-content">
@@ -166,10 +166,23 @@ var Lobby = React.createClass({
       modal.style.display = "block";
 
     window.onclick = function(event) {
-        if (event.target == modal) {
+        if (event.target === modal) {
             modal.style.display = "none";
         }
     }
+  },
+
+  openModal: function() {
+    this.setState({modalIsOpen: true});
+  },
+
+  afterOpenModal: function() {
+    // references are now sync'd and can be accessed.
+    this.refs.subtitle.style.color = '#f00';
+  },
+
+  closeModal: function() {
+    this.setState({modalIsOpen: false});
   },
 
   render: function() {
@@ -179,16 +192,69 @@ var Lobby = React.createClass({
       );
     }
     return (
-      <div className="App">
-        {this.state.modal}<br/>
-        Welcome! {this.state.userEmail}<br/>
-        <input type="button" id="myBtn" onClick={this.createNewGame} value="Create new game" />
-        <br/><br/>
+      <div className="lobby">
+        <p className="lobby-header">Welcome! {this.state.userEmail}</p>
+        <p><button className="lobby-button" onClick={this.openModal}>Create New Game</button></p>
         {this.state.gameTable}
+        <Modal
+          isOpen={this.state.modalIsOpen}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+
+          <div className="lobby-modal-content">
+            <p className="lobby-header">
+              <center>
+                Create New Game
+              </center>
+            </p>
+            <p className="lobby-text">
+              Please enter a name of your game room.
+            </p>
+            <form>
+              <p>
+                <center>
+                  <input type="text" id="gameName" className="lobby-textbox" autocomplete="off"/>
+                </center>
+              </p>
+              <p>
+                <center>
+                  <input type="button" onClick={this.createGameInFirebase} value="Submit" className="lobby-button" />
+                  <span className="lobby-space" />
+                  <input type="button" onClick={this.closeModal} value="Cancel" className="lobby-button" />
+                </center>
+              </p>
+            </form>
+          </div>
+        </Modal>
       </div>
     );
   }
 });
+
+const customStyles = {
+  overlay : {
+    position          : 'fixed',
+    top               : 0,
+    left              : 0,
+    right             : 0,
+    bottom            : 0,
+    backgroundColor   : 'rgba(200, 200, 255, 1)'
+  },
+  content : {
+    top                   : '45%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)',
+    border                : '2px solid #222',
+    borderRadius          : '10px',
+  }
+};
+
 
 export default Lobby;
 
