@@ -33,14 +33,13 @@ var EndGame = React.createClass({
    
     var player0 = firebase.database().ref('games/'+ this.props.gameId+'/players/player0/id');
     var player1 = firebase.database().ref('games/'+ this.props.gameId+'/players/player1/id');
-    console.log("Kao " + 'games/'+ this.props.gameId+'/players/player0/id')
     player0.once('value', function(snapshot) {
       value = snapshot.val();
-      if (value == this.props.userId) {
+      if (value === this.props.userId) {
         var suspect0 = firebase.database().ref('games/'+ this.props.gameId+'/players/player0/suspect');
         suspect0.once('value', function(snapshot2) {
           value2 = snapshot2.numChildren();
-          if (value2 == 1) {
+          if (value2 === 1) {
             this.setState({
               result: "win"
             });
@@ -51,7 +50,7 @@ var EndGame = React.createClass({
         var suspect1 = firebase.database().ref('games/'+ this.props.gameId+'/players/player1/suspect');
         suspect1.once('value', function(snapshot2) {
           value2 = snapshot2.numChildren();
-          if (value2 == 1) {
+          if (value2 === 1) {
             this.setState({
               result: "win"
             });
@@ -70,7 +69,7 @@ var EndGame = React.createClass({
   },
 
   render: function() {
-    if (this.state.result == "win") {
+    if (this.state.result === "win") {
       return (
         <div className="EndGame">
           <div className="EndGame-header">
