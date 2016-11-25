@@ -19,7 +19,6 @@ var Lobby = React.createClass({
       modal: "",
       gameTable: "",
       goToWaitRoom: false,
-      userId: this.props.userId,
       userEmail: null,
       gameId: null
     };
@@ -89,10 +88,26 @@ var Lobby = React.createClass({
   },
 
   joinGame: function(key) {
-    this.setState({
-      gameId: key,
-      goToWaitRoom: true
-    });
+    var gamesRef = firebase.database().ref('games/' + key);
+    gamesRef.once('value', function(snapshot) {
+      var value = snapshot.val();
+      if (value.status == "waiting")
+      {
+        var statusRef = firebase.database().ref('games/' + key + '/status');
+        statusRef.set("full");
+
+        var player1Ref = firebase.database().ref('games/' + key + '/players/player1')
+        player1Ref.set({
+          id: this.props.userId,
+          ready: false
+        });
+
+        this.setState({
+          gameId: key,
+          goToWaitRoom: true
+        });
+      }
+    }.bind(this));
   },
 
   componentWillUnmount: function() {
@@ -158,16 +173,15 @@ var Lobby = React.createClass({
   },
 
   render: function() {
-    if (this.state.goToWaitRoom)
-    {
+    if (this.state.goToWaitRoom) {
       return (
-        <WaitRoom userId={this.state.userId} gameId={this.state.gameId} />
+        <WaitRoom userId={this.props.userId} gameId={this.state.gameId} />
       );
     }
     return (
       <div className="App">
-        Welcome! {this.state.userEmail}<br/>
         {this.state.modal}<br/>
+        Welcome! {this.state.userEmail}<br/>
         <input type="button" id="myBtn" onClick={this.createNewGame} value="Create new game" />
         <br/><br/>
         {this.state.gameTable}
