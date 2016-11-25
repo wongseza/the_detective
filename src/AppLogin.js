@@ -77,11 +77,11 @@ var AppLogin = React.createClass({
             <table className="App-login">
                 <tr>
                     <td className="App-login-header">Email : </td>
-                    <td><input id="txtEmail" type="email" placeholder="Email"onKeyPress={this.clickButtonLogin} /></td>
+                    <td><input id="txtEmail" type="email" placeholder="Email" /></td>
                 </tr>
                 <tr>
                     <td className="App-login-header">Password : </td>
-                    <td><input id="txtPassword" type="password" placeholder="Password" onKeyPress={this.clickButtonLogin} /></td>
+                    <td><input id="txtPassword" type="password" placeholder="Password" /></td>
                 </tr>
                 <tr>
                     <td></td>
