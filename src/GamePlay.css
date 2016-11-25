@@ -1,0 +1,18 @@
+.Board {
+  text-align: center;
+}
+
+.Board-alignment {
+  height: 100%;
+}
+
+.Tile-logo {
+  height: 100%;
+}
+
+.Suspect-logo {
+  position:absolute;
+  top: 70px;
+  left: 100px;
+  z-index: 3;
+}

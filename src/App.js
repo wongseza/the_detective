@@ -6,6 +6,7 @@ import WaitRoom from './WaitRoom';
 import EndGame from './EndGame';
 import AppLogin from './AppLogin';
 import Lobby from './Lobby';
+import GamePlay from './GamePlay';
 
 var firebase = require("firebase");
 var config = {
@@ -72,7 +73,7 @@ var App = React.createClass({
 
   clickEndGame: function(e) {
     console.log('click button to end game');
-    return ReactDOM.render(<EndGame userId='14 34 48' gameId='-KWq-fZKpb-a4lLvug8T' />,document.getElementById('root'));
+    return ReactDOM.render(<EndGame userId='14 34 48' gameId="-KWq-fZKpb-a4lLvug8T" />,document.getElementById('root'));
   },
   
   clickToLogin: function(e) {
@@ -83,6 +84,11 @@ var App = React.createClass({
   clickLobby: function(e) {
     console.log('click button to wait room');
     return ReactDOM.render(<Lobby userId="16 37 4"/>,document.getElementById('root'));
+  },
+
+  clickGamePlay: function(e) {
+    console.log('click button to Game Play');
+    return ReactDOM.render(<GamePlay userId="14 34 48" gameId="-KWq-fZKpb-a4lLvug8T"/>,document.getElementById('root'));
   },
 
   render: function() {
@@ -102,6 +108,7 @@ var App = React.createClass({
         <input type="button" onClick={this.clickEndGame} value="To EndGame" />
         <input type="button" onClick={this.clickToLogin} value="To Login" />
         <input type="button" onClick={this.clickLobby} value="To Lobby" />
+        <input type="button" onClick={this.clickGamePlay} value="To GamePlay" />
       </div>
     );
   }
