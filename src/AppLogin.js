@@ -52,7 +52,7 @@ var AppLogin = React.createClass({
             username: displayName,
             email: email,
         });
-        ReactDOM.render(<Lobby />, document.getElementById('root'))
+        ReactDOM.render(<Lobby userId={uid}/>, document.getElementById('root'))
     }
     
   },
