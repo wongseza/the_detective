@@ -217,17 +217,16 @@ var Lobby = React.createClass({
     {
       this.setState({
         currentPage: this.state.currentPage + 1
-      }, function(){this.updateGameTable()});
+      }, function(){
+        this.updateGameTable()
+      });
     }
   },
 
   logOut: function() {
     firebase.auth().signOut().then(function() {
       ReactDOM.render(<AppLogin />,document.getElementById('root'));
-      // Sign-out successful.
-    }.bind(this), function(error) {
-      // An error happened.
-    });
+    }.bind(this), function(error) {});
   },
 
   render: function() {
