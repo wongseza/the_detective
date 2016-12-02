@@ -42,7 +42,7 @@ var App = React.createClass({
   componentWillMount: function() {
     var currentTime = new Date();
     var value = 0;
-    writeData('' + currentTime.getHours() + ' ' + currentTime.getMinutes() + ' ' + currentTime.getSeconds(), 'aaaa', 'bbbbb');
+    /*writeData('' + currentTime.getHours() + ' ' + currentTime.getMinutes() + ' ' + currentTime.getSeconds(), 'aaaa', 'bbbbb');*/
 
     // usersRef = firebase.database().ref('users/');
     usersRef.on('value', function(snapshot) {
