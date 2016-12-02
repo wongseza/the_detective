@@ -18,7 +18,6 @@ var firebaseRef = firebase.initializeApp(config, 'lobby');
 var Lobby = React.createClass({
   getInitialState: function() {
     return {
-      modal: "",
       gameTable: "",
       goToWaitRoom: false,
       userEmail: null,
@@ -50,8 +49,8 @@ var Lobby = React.createClass({
             <thead>
               <tr className="lobby-table-header">
                 <th className="lobby-table-header">No.</th>
-                <th className="lobby-table-header">Name</th>
-                <th className="lobby-table-header">Player</th>
+                <th className="lobby-table-header">Room</th>
+                <th className="lobby-table-header">Players</th>
                 <th className="lobby-table-header">Join</th>
               </tr>
             </thead>
@@ -115,12 +114,6 @@ var Lobby = React.createClass({
     this.firebaseRef.off();
   },
 
-  /*closeModal: function() {
-    var modal = document.getElementById('myModal');
-    if (modal != null)
-      modal.style.display = "none";
-  },*/
-
   createGameInFirebase: function(){
     var gamesRef = firebase.database().ref('games/');
     var gameRef = gamesRef.push({
@@ -142,43 +135,13 @@ var Lobby = React.createClass({
     });
   },
 
-  createNewGame: function(e) {
-    this.setState({
-      modal: 
-        <div id="myModal" className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={this.closeModal}>
-              x
-            </span>
-            <p>
-              <strong>Create new game</strong><br/><br/>
-              Please enter a desired name of your game room.<br/><br/>
-              <input type="text" id="gameName" /> <br/><br/>
-              <input type="button" onClick={this.createGameInFirebase} value="Submit" />
-            </p>
-          </div>
-        </div>
-    });
-
-    // Get the modal
-    var modal = document.getElementById('myModal');
-    if (modal != null)
-      modal.style.display = "block";
-
-    window.onclick = function(event) {
-        if (event.target === modal) {
-            modal.style.display = "none";
-        }
-    }
-  },
-
   openModal: function() {
     this.setState({modalIsOpen: true});
   },
 
   afterOpenModal: function() {
     // references are now sync'd and can be accessed.
-    this.refs.subtitle.style.color = '#f00';
+    this.refs.gameName.focus();
   },
 
   closeModal: function() {
@@ -194,7 +157,8 @@ var Lobby = React.createClass({
     return (
       <div className="lobby">
         <p className="lobby-header">Welcome! {this.state.userEmail}</p>
-        <p><button className="lobby-button" onClick={this.openModal}>Create New Game</button></p>
+        <p><button className="lobby-big-button" onClick={this.openModal}>Create New Game</button></p>
+        <br/>
         {this.state.gameTable}
         <Modal
           isOpen={this.state.modalIsOpen}
@@ -211,19 +175,19 @@ var Lobby = React.createClass({
               </center>
             </p>
             <p className="lobby-text">
-              Please enter a name of your game room.
+              Please enter a name for your game room.
             </p>
             <form>
               <p>
                 <center>
-                  <input type="text" id="gameName" className="lobby-textbox" autocomplete="off"/>
+                  <input type="text" id="gameName" ref="gameName" className="lobby-modal-textbox" autocomplete="off"/>
                 </center>
               </p>
               <p>
                 <center>
-                  <input type="button" onClick={this.createGameInFirebase} value="Submit" className="lobby-button" />
+                  <input type="button" onClick={this.createGameInFirebase} value="Submit" className="lobby-modal-button" />
                   <span className="lobby-space" />
-                  <input type="button" onClick={this.closeModal} value="Cancel" className="lobby-button" />
+                  <input type="button" onClick={this.closeModal} value="Cancel" className="lobby-modal-button" />
                 </center>
               </p>
             </form>
@@ -241,7 +205,7 @@ const customStyles = {
     left              : 0,
     right             : 0,
     bottom            : 0,
-    backgroundColor   : 'rgba(200, 200, 255, 1)'
+    backgroundColor   : 'rgba(180, 180, 180, 0.8)'
   },
   content : {
     top                   : '45%',
@@ -250,8 +214,9 @@ const customStyles = {
     bottom                : 'auto',
     marginRight           : '-50%',
     transform             : 'translate(-50%, -50%)',
-    border                : '2px solid #222',
+    border                : '3px solid #333',
     borderRadius          : '10px',
+    backgroundColor       : '#fff'
   }
 };
 

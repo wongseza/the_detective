@@ -70,18 +70,45 @@
 
 /* Modal Content/Box */
 .lobby-modal-content {
-  background-color: #fefefe;
   margin: 5% auto; /* 15% from the top and centered */
   font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.lobby-modal-textbox {
+  border: 2px solid #333;
+  width: 90%;
+  text-align: center;
+  padding: 5px;
+  font-size: 24px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  margin-bottom: 10px;
+  color: #333;
+  background-color: #def;
+}
+
+.lobby-modal-button {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 2px solid #333;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 20px;
+  background-color: #bed;
+  color: #333;
 }
 
 .lobby-header {
   font-size: 32px;
   font-weight: bold;
+  color: #333;
 }
 
 .lobby-text {
   font-size: 24px;
+  color: #333;
 }
 
 .lobby-space {
@@ -89,52 +116,64 @@
   width: 10%;
 }
 
-.lobby-textbox {
-  border: 2px solid #222;
-  width: 90%;
-  text-align: center;
-  padding: 5px;
-  font-size: 24px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  margin-bottom: 10px;
-}
-
 .lobby-button {
-  padding: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin: 5px;
   border-radius: 5px;
-  border: 2px solid #222;
-  background: #ddd;
+  border: 2px solid #333;
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-size: 20px;
+  background-color: #bed;
+  color: #333;
+}
+
+.lobby-big-button {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 20px;
+  padding-left: 20px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 2px solid #333;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 24px;
+  background-color: #bdd;
+  color: #333;
 }
 
 .lobby-table {
   margin: auto;
-  border: 2px solid #222;
+  border: 2px solid #333;
   border-collapse: collapse;
   font-size: 20px;
 }
 
 .lobby-table-header {
-  margin: auto;
-  border: 2px solid #222;
+  padding: 10px;
+  border: 2px solid #333;
   border-collapse: collapse;
   font-size: 20px;
   font-weight: bold;
-  padding: 5px;
-  color: #222;
+  color: #333;
+  background-color: #ccc;
 }
 
 .lobby-wide-column {
-  margin: auto;
-  border: 2px solid #222;
+  border: 2px solid #333;
   border-collapse: collapse;
   width: 300px;
+  height: 0px;
+  color: #333;
 }
 
 .lobby-narrow-column {
-  margin: auto;
-  border: 2px solid #222;
+  border: 2px solid #333;
   border-collapse: collapse;
   width: 100px;
+  height: 0px;
+  color: #333;
 }
+
