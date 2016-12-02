@@ -89,7 +89,7 @@ var App = React.createClass({
 
   clickGamePlay: function(e) {
     console.log('click button to Game Play');
-    return ReactDOM.render(<GamePlay userId="14 34 48" gameId="-KWq-fZKpb-a4lLvug8T"/>,document.getElementById('root'));
+    return ReactDOM.render(<GamePlay userId="14 34 48" gameId="-KWq-fZKpb-a4lLvug8T" playerId="player0"/>,document.getElementById('root'));
   },
 
   clickAction: function(e) {
