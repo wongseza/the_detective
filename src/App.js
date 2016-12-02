@@ -7,6 +7,7 @@ import EndGame from './EndGame';
 import AppLogin from './AppLogin';
 import Lobby from './Lobby';
 import GamePlay from './GamePlay';
+import Action from './Action';
 
 var firebase = require("firebase");
 var config = {
@@ -91,6 +92,11 @@ var App = React.createClass({
     return ReactDOM.render(<GamePlay userId="14 34 48" gameId="-KWq-fZKpb-a4lLvug8T"/>,document.getElementById('root'));
   },
 
+  clickAction: function(e) {
+    console.log('click button to Action');
+    return ReactDOM.render(<Action userId="14 34 48" gameId="-KWq-fZKpb-a4lLvug8T"/>,document.getElementById('root'));
+  },
+
   render: function() {
     return (
       <div className="App">
@@ -109,6 +115,7 @@ var App = React.createClass({
         <input type="button" onClick={this.clickToLogin} value="To Login" />
         <input type="button" onClick={this.clickLobby} value="To Lobby" />
         <input type="button" onClick={this.clickGamePlay} value="To GamePlay" />
+        <input type="button" onClick={this.clickAction} value="To Action" />
       </div>
     );
   }
