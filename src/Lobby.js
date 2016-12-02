@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import WaitRoom from './WaitRoom';
+import AppLogin from './AppLogin';
 
+var gamesRef;
 var ReactDOM = require('react-dom');
 var Modal = require('react-modal');
 var firebase = require("firebase");
@@ -19,11 +21,17 @@ var Lobby = React.createClass({
   getInitialState: function() {
     return {
       gameTable: "",
-      goToWaitRoom: false,
       userEmail: null,
       gameId: null,
-      modalIsOpen: false
+      modalIsOpen: false,
+      currentPage: 1,
+      numberOfPages: 1
     };
+  },
+
+  componentWillUnmount: function() {
+    if (gamesRef != null)
+      gamesRef.off();
   },
 
   componentWillMount: function() {
@@ -38,40 +46,21 @@ var Lobby = React.createClass({
       });
     }.bind(this));
 
-    var gamesRef = firebase.database().ref('games/');
+    gamesRef = firebase.database().ref('games/');
     gamesRef.on('value', function(snapshot) {
       var value = snapshot.val();
-
-      var rows = [];
-      var table = 
-        <div>
-          <table className="lobby-table">
-            <thead>
-              <tr className="lobby-table-header">
-                <th className="lobby-table-header">No.</th>
-                <th className="lobby-table-header">Room</th>
-                <th className="lobby-table-header">Players</th>
-                <th className="lobby-table-header">Join</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows}
-            </tbody>
-          </table>
-        </div>
-      ;
-
       var keyList = Object.keys(value);
-      var j = 0;
-      for(var i = 0 ; i < keyList.length ; i++)
+      var count = 0;
+      var rows = [];
+      for (var i = 0 ; i < keyList.length ; i++)
       {
         var game = value[keyList[i]];
         if (game.status === "waiting")
         {
-          j++;
+          count++;
           rows.push(
             <tr className="lobby-table">
-              <td className="lobby-narrow-column">{j}.</td>
+              <td className="lobby-narrow-column">{count}.</td>
               <td className="lobby-wide-column">{game.name}</td>
               <td className="lobby-narrow-column">1/2</td>
               <td className="lobby-narrow-column"><input type="button" value="Join" className="lobby-button" onClick={this.joinGame.bind(this, keyList[i])} /></td>
@@ -79,12 +68,80 @@ var Lobby = React.createClass({
           );
         }
       }
-
+      
       this.setState({
-        gameTable: table
+        rows: rows,
+        numberOfPages: Math.ceil(count / 5)
+      }, function(){
+        if (this.state.numberOfPages < this.state.currentPage)
+        {
+          this.setState({
+            currentPage: this.state.numberOfPages
+          });
+        }
       });
 
+      this.updateGameTable();
+
     }.bind(this));
+  },
+
+  updateGameTable: function() {
+    var rows = [];
+    if (this.state.currentPage === 0)
+    {
+      this.setState({
+        gameTable:
+          <table className="lobby-no-room-text">
+            <tr>
+              <td className="lobby-no-room-text">
+                There are no vacant rooms.
+                <br/>
+                Please create a new room.
+              </td>
+            </tr>
+          </table>,
+        currentPage: 1,
+        numberOfPages: 1
+      });
+    }
+    else
+    {
+      var first = (this.state.currentPage - 1) * 5;
+      var lastPlusOne = (first + 5 > this.state.rows.length) ? this.state.rows.length : first + 5;
+      var rows = this.state.rows.slice(first, lastPlusOne);
+
+      for (var i = lastPlusOne; i < first + 5; i++)
+      {
+        rows.push(
+          <tr className="lobby-table">
+            <td className="lobby-narrow-column-borderless"></td>
+            <td className="lobby-wide-column-borderless"></td>
+            <td className="lobby-narrow-column-borderless"></td>
+            <td className="lobby-narrow-column-borderless"><input type="button" className="lobby-empty-button" disabled/></td>
+          </tr>
+        );
+      }
+
+      this.setState({
+        gameTable:
+          <div>
+            <table className="lobby-table">
+              <thead>
+                <tr className="lobby-table-header">
+                  <th className="lobby-table-header">No.</th>
+                  <th className="lobby-table-header">Room</th>
+                  <th className="lobby-table-header">Players</th>
+                  <th className="lobby-table-header">Join</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows}
+              </tbody>
+            </table>
+          </div>
+      });
+    }
   },
 
   joinGame: function(key) {
@@ -103,15 +160,12 @@ var Lobby = React.createClass({
         });
 
         this.setState({
-          gameId: key,
-          goToWaitRoom: true
+          gameId: key
         });
+
+        ReactDOM.render(<WaitRoom userId={this.props.userId} gameId={this.state.gameId} />, document.getElementById('root'));
       }
     }.bind(this));
-  },
-
-  componentWillUnmount: function() {
-    this.firebaseRef.off();
   },
 
   createGameInFirebase: function(){
@@ -125,14 +179,15 @@ var Lobby = React.createClass({
           ready: false
         }
       },
-      name: document.getElementById('gameName').value,
+      name: this.refs.gameName.value,
       status: "waiting"
     });
     this.closeModal();
     this.setState({
-      gameId: gameRef.key,
-      goToWaitRoom: true
+      gameId: gameRef.key
     });
+
+    ReactDOM.render(<WaitRoom userId={this.props.userId} gameId={this.state.gameId} />, document.getElementById('root'));
   },
 
   openModal: function() {
@@ -148,18 +203,68 @@ var Lobby = React.createClass({
     this.setState({modalIsOpen: false});
   },
 
-  render: function() {
-    if (this.state.goToWaitRoom) {
-      return (
-        <WaitRoom userId={this.props.userId} gameId={this.state.gameId} />
-      );
+  goToPrevPage: function() {
+    if (this.state.currentPage > 1)
+    {
+      this.setState({
+        currentPage: this.state.currentPage - 1
+      }, function(){this.updateGameTable()});
     }
+  },
+
+  goToNextPage: function() {
+    if (this.state.currentPage < this.state.numberOfPages)
+    {
+      this.setState({
+        currentPage: this.state.currentPage + 1
+      }, function(){this.updateGameTable()});
+    }
+  },
+
+  logOut: function() {
+    firebase.auth().signOut().then(function() {
+      ReactDOM.render(<AppLogin />,document.getElementById('root'));
+      // Sign-out successful.
+    }.bind(this), function(error) {
+      // An error happened.
+    });
+  },
+
+  render: function() {
     return (
       <div className="lobby">
-        <p className="lobby-header">Welcome! {this.state.userEmail}</p>
-        <p><button className="lobby-big-button" onClick={this.openModal}>Create New Game</button></p>
-        <br/>
-        {this.state.gameTable}
+        <table className="lobby-container">
+          <tr className="lobby-header">
+            <td className="lobby-header">
+              <p className="lobby-header-text">Welcome! {this.state.userEmail}</p>
+              <p><button className="lobby-big-button" onClick={this.openModal}>Create New Game</button></p>
+            </td>
+          </tr>
+          <tr className="lobby-main">
+            <td className="lobby-main">
+              {this.state.gameTable}
+            </td>
+          </tr>
+          <tr className="lobby-footer">
+            <td className="lobby-footer">
+              <table className="lobby-navigate-table">
+                <tr>
+                  <td className="lobby-navigate-column">
+                    <button className="lobby-navigate-button" onClick={this.goToPrevPage} ref="prevPageButton">&lt;&lt; Previous</button>
+                  </td>
+                  <td className="lobby-navigate-column">
+                    <span className="lobby-text">Page {this.state.currentPage}/{this.state.numberOfPages}</span>
+                  </td>
+                  <td className="lobby-navigate-column">
+                    <button className="lobby-navigate-button" onClick={this.goToNextPage} ref="nextPageButton">Next &gt;&gt;</button>
+                  </td>
+                </tr>
+              </table>
+              <br/>
+              <button className="lobby-logout-button" onClick={this.logOut} ref="logOutButton">Log Out</button>
+            </td>
+          </tr>
+        </table>
         <Modal
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
@@ -167,9 +272,8 @@ var Lobby = React.createClass({
           style={customStyles}
           contentLabel="Example Modal"
         >
-
           <div className="lobby-modal-content">
-            <p className="lobby-header">
+            <p className="lobby-header-text">
               <center>
                 Create New Game
               </center>
@@ -180,12 +284,12 @@ var Lobby = React.createClass({
             <form>
               <p>
                 <center>
-                  <input type="text" id="gameName" ref="gameName" className="lobby-modal-textbox" autocomplete="off"/>
+                  <input type="text" id="gameName" ref="gameName" className="lobby-modal-textbox"/>
                 </center>
               </p>
               <p>
                 <center>
-                  <input type="button" onClick={this.createGameInFirebase} value="Submit" className="lobby-modal-button" />
+                  <input type="button" onClick={this.createGameInFirebase} value="Submit" className="lobby-modal-button"/>
                   <span className="lobby-space" />
                   <input type="button" onClick={this.closeModal} value="Cancel" className="lobby-modal-button" />
                 </center>
