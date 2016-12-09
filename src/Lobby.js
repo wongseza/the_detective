@@ -22,7 +22,6 @@ var Lobby = React.createClass({
     return {
       gameTable: "",
       userEmail: null,
-      gameId: null,
       modalIsOpen: false,
       currentPage: 1,
       numberOfPages: 1
@@ -159,11 +158,7 @@ var Lobby = React.createClass({
           ready: false
         });
 
-        this.setState({
-          gameId: key
-        });
-
-        ReactDOM.render(<WaitRoom userId={this.props.userId} gameId={this.state.gameId} />, document.getElementById('root'));
+        ReactDOM.render(<WaitRoom userId={this.props.userId} gameId={key} />, document.getElementById('root'));
       }
     }.bind(this));
   },
@@ -181,13 +176,10 @@ var Lobby = React.createClass({
       },
       name: this.refs.gameName.value,
       status: "waiting"
+    }).then((ref) => {
+      this.closeModal();
+      ReactDOM.render(<WaitRoom userId={this.props.userId} gameId={ref.key} />, document.getElementById('root'));
     });
-    this.closeModal();
-    this.setState({
-      gameId: gameRef.key
-    });
-
-    ReactDOM.render(<WaitRoom userId={this.props.userId} gameId={this.state.gameId} />, document.getElementById('root'));
   },
 
   openModal: function() {
