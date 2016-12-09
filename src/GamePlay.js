@@ -477,7 +477,7 @@ var GamePlay = React.createClass({
     });
 
     var tileValue = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId);
-    tileValue.set({
+    tileValue.update({
       tile: newValue
     })
 
