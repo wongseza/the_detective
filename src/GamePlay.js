@@ -22,6 +22,25 @@ firebase.initializeApp(config, "gamePlayFirebase");
 
 // Get a reference to the database service
 
+var detectiveMoveMapping = {
+  "1N" : "2N,3N,1W,2W",
+  "2N" : "3N,4N,1N,1W",
+  "3N" : "4N,1E,2N,1N",
+  "4N" : "1E,2E,3N,2N",
+  "1E" : "2E,3E,4N,3N",
+  "2E" : "3E,4E,1E,4N",
+  "3E" : "4E,4S,2E,1E",
+  "4E" : "4S,3S,3E,2E",
+  "1S" : "4W,3W,2S,3S",
+  "2S" : "1S,4W,3S,4S",
+  "3S" : "2S,1S,4S,4E",
+  "4S" : "3S,2S,4E,3E",
+  "1W" : "1N,2N,2W,3W",
+  "2W" : "1W,1N,3W,4W",
+  "3W" : "2W,1W,4W,1S",
+  "4W" : "3W,2W,1S,2S"
+};
+
 var GamePlay = React.createClass({
 
   getInitialState: function() {
@@ -452,12 +471,12 @@ var GamePlay = React.createClass({
   },
 
   clickTile: function(tileId) {
-    var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId + '/tile');
+    var tileValue = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId + '/tile');
     console.log(tileId);
     var value = 0;
     var newValue = 0;
 
-    tile.once('value', function(snapshot) {
+    tileValue.once('value', function(snapshot) {
       value = snapshot.val();
 
       switch (value) {
@@ -478,8 +497,8 @@ var GamePlay = React.createClass({
       }
     });
 
-    var tileValue = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId);
-    tileValue.update({
+    var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId);
+    tile.update({
       tile: newValue
     })
 
@@ -493,9 +512,23 @@ var GamePlay = React.createClass({
       cells[i].style.backgroundColor = "";
     }
 
-    var activeCell = document.getElementById(id);
-    activeCell.style.backgroundColor = "lightslategray";
-      
+    var isDetectiveOnTile = false;
+    if (this.state.player1Detective1 === id || this.state.player1Detective2 === id || this.state.player2Detective1 === id || this.state.player2Detective2 === id)
+      isDetectiveOnTile = true;
+
+    if (isDetectiveOnTile) {
+      var activeCell = document.getElementById(id);
+      activeCell.style.backgroundColor = "lightslategray";
+
+      var locations = detectiveMoveMapping[id];
+      var loc = locations.split(",");
+
+      for (var i=0,len=loc.length; i<len; i++){
+        var activeCell = document.getElementById(loc[i]);
+        activeCell.style.backgroundColor = "lightslategray";
+      }
+    }
+    
 
     // var cells = document.getElementById('GameBoard').getElementsByTagName('td');
 
@@ -561,7 +594,7 @@ var GamePlay = React.createClass({
     }
   },
 
-  addplayer1Detective: function(id) {
+  addPlayer1Detective: function(id) {
     console.log("add detective " + id);
 
     if (this.state.player1Detective1 === id)
@@ -572,7 +605,7 @@ var GamePlay = React.createClass({
       return ("");
   },
 
-  addplayer2Detective: function(id) {
+  addPlayer2Detective: function(id) {
     console.log("add detective " + id);
 
     if (this.state.player2Detective1 === id)
@@ -594,28 +627,28 @@ var GamePlay = React.createClass({
                   <td className="UnusedCell">
                   </td>
                   <td id="1N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1N")} >
-                    {this.addplayer1Detective.bind(this, "1N")()}
-                    {this.addplayer2Detective.bind(this, "1N")()}
+                    {this.addPlayer1Detective.bind(this, "1N")()}
+                    {this.addPlayer2Detective.bind(this, "1N")()}
                   </td>
                   <td id="2N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2N")} >
-                    {this.addplayer1Detective.bind(this, "2N")()}
-                    {this.addplayer2Detective.bind(this, "2N")()}
+                    {this.addPlayer1Detective.bind(this, "2N")()}
+                    {this.addPlayer2Detective.bind(this, "2N")()}
                   </td>
                   <td id="3N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3N")} >
-                    {this.addplayer1Detective.bind(this, "3N")()}
-                    {this.addplayer2Detective.bind(this, "3N")()}
+                    {this.addPlayer1Detective.bind(this, "3N")()}
+                    {this.addPlayer2Detective.bind(this, "3N")()}
                   </td>
                   <td id="4N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4N")} >
-                    {this.addplayer1Detective.bind(this, "4N")()}
-                    {this.addplayer2Detective.bind(this, "4N")()}
+                    {this.addPlayer1Detective.bind(this, "4N")()}
+                    {this.addPlayer2Detective.bind(this, "4N")()}
                   </td>
                   <td className="UnusedCell">
                   </td>
                 </tr>
                 <tr>
                   <td id="1W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1W")} >
-                    {this.addplayer1Detective.bind(this, "1W")()}
-                    {this.addplayer2Detective.bind(this, "1W")()}
+                    {this.addPlayer1Detective.bind(this, "1W")()}
+                    {this.addPlayer2Detective.bind(this, "1W")()}
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile1x1} alt="logo" onClick={this.clickTile.bind(this, "1x1")}/>
@@ -634,14 +667,14 @@ var GamePlay = React.createClass({
                     <img src={suspectA} className="Suspect-pos" alt="logo" />
                   </td>
                   <td id="1E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1E")} >
-                    {this.addplayer1Detective.bind(this, "1E")()}
-                    {this.addplayer2Detective.bind(this, "1E")()}
+                    {this.addPlayer1Detective.bind(this, "1E")()}
+                    {this.addPlayer2Detective.bind(this, "1E")()}
                   </td>
                 </tr>
                 <tr>
                   <td id="2W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2W")} >
-                    {this.addplayer1Detective.bind(this, "2W")()}
-                    {this.addplayer2Detective.bind(this, "2W")()}
+                    {this.addPlayer1Detective.bind(this, "2W")()}
+                    {this.addPlayer2Detective.bind(this, "2W")()}
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile2x1} alt="logo" onClick={this.clickTile.bind(this, "2x1")} />
@@ -660,14 +693,14 @@ var GamePlay = React.createClass({
                     <img src={suspectA} className="Suspect-pos" alt="logo" />
                   </td>
                   <td id="2E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2E")} >
-                    {this.addplayer1Detective.bind(this, "2E")()}
-                    {this.addplayer2Detective.bind(this, "2E")()}
+                    {this.addPlayer1Detective.bind(this, "2E")()}
+                    {this.addPlayer2Detective.bind(this, "2E")()}
                   </td>
                 </tr>
                 <tr>
                   <td id="3W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3W")} >
-                    {this.addplayer1Detective.bind(this, "3W")()}
-                    {this.addplayer2Detective.bind(this, "3W")()}
+                    {this.addPlayer1Detective.bind(this, "3W")()}
+                    {this.addPlayer2Detective.bind(this, "3W")()}
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile3x1} alt="logo" onClick={this.clickTile.bind(this, "3x1")} />
@@ -686,14 +719,14 @@ var GamePlay = React.createClass({
                     <img src={suspectA} className="Suspect-pos" alt="logo" />
                   </td>
                   <td id="3E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3E")} >
-                    {this.addplayer1Detective.bind(this, "3E")()}
-                    {this.addplayer2Detective.bind(this, "3E")()}
+                    {this.addPlayer1Detective.bind(this, "3E")()}
+                    {this.addPlayer2Detective.bind(this, "3E")()}
                   </td>
                 </tr>
                 <tr>
                   <td id="4W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4W")} >
-                    {this.addplayer1Detective.bind(this, "4W")()}
-                    {this.addplayer2Detective.bind(this, "4W")()}
+                    {this.addPlayer1Detective.bind(this, "4W")()}
+                    {this.addPlayer2Detective.bind(this, "4W")()}
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile4x1} alt="logo" onClick={this.clickTile.bind(this, "4x1")} />
@@ -712,28 +745,28 @@ var GamePlay = React.createClass({
                     <img src={suspectA} className="Suspect-pos" alt="logo" />
                   </td>
                   <td id="4E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4E")} >
-                    {this.addplayer1Detective.bind(this, "4E")()}
-                    {this.addplayer2Detective.bind(this, "4E")()}
+                    {this.addPlayer1Detective.bind(this, "4E")()}
+                    {this.addPlayer2Detective.bind(this, "4E")()}
                   </td>
                 </tr>
                 <tr>
                   <td className="UnusedCell">
                   </td>
                   <td id="1S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1S")} >
-                    {this.addplayer1Detective.bind(this, "1S")()}
-                    {this.addplayer2Detective.bind(this, "1S")()}
+                    {this.addPlayer1Detective.bind(this, "1S")()}
+                    {this.addPlayer2Detective.bind(this, "1S")()}
                   </td>
                   <td id="2S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2S")} >
-                    {this.addplayer1Detective.bind(this, "2S")()}
-                    {this.addplayer2Detective.bind(this, "2S")()}
+                    {this.addPlayer1Detective.bind(this, "2S")()}
+                    {this.addPlayer2Detective.bind(this, "2S")()}
                   </td>
                   <td id="3S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3S")} >
-                    {this.addplayer1Detective.bind(this, "3S")()}
-                    {this.addplayer2Detective.bind(this, "3S")()}
+                    {this.addPlayer1Detective.bind(this, "3S")()}
+                    {this.addPlayer2Detective.bind(this, "3S")()}
                   </td>
                   <td id="4S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4S")} >
-                    {this.addplayer1Detective.bind(this, "4S")()}
-                    {this.addplayer2Detective.bind(this, "4S")()}
+                    {this.addPlayer1Detective.bind(this, "4S")()}
+                    {this.addPlayer2Detective.bind(this, "4S")()}
                   </td>
                   <td className="UnusedCell">
                   </td>
