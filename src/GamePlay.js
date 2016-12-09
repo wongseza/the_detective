@@ -64,8 +64,8 @@ var GamePlay = React.createClass({
       this.setState(newState);
     }.bind(this))
 
-    var player0Detective1 = firebase.database().ref('games/'+ this.props.gameId + '/players/player0/agent1');
-    var player0Detective2 = firebase.database().ref('games/'+ this.props.gameId + '/players/player0/agent2');
+    var player0Detective1 = firebase.database().ref('games/'+ this.props.gameId + '/players/player1/detective1');
+    var player0Detective2 = firebase.database().ref('games/'+ this.props.gameId + '/players/player1/detective2');
 
     player0Detective1.on('value', function(snapshot) {
       value = snapshot.val();
@@ -81,8 +81,8 @@ var GamePlay = React.createClass({
       });
     }.bind(this))
 
-    var player1Detective1 = firebase.database().ref('games/'+ this.props.gameId + '/players/player1/agent1');
-    var player1Detective2 = firebase.database().ref('games/'+ this.props.gameId + '/players/player1/agent2');
+    var player1Detective1 = firebase.database().ref('games/'+ this.props.gameId + '/players/player2/detective1');
+    var player1Detective2 = firebase.database().ref('games/'+ this.props.gameId + '/players/player2/detective2');
 
     player1Detective1.on('value', function(snapshot) {
       value = snapshot.val();
@@ -182,153 +182,162 @@ var GamePlay = React.createClass({
   render: function() {
     return (
       <div className="Board">
-        <table id="GameBoard">
+        <table>
           <tr>
-            <td className="UnusedCell">
+            <td>
+              <table id="GameBoard">
+                <tr>
+                  <td className="UnusedCell">
+                  </td>
+                  <td id="1N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1N")} >
+                    {this.addPlayer0Detective.bind(this, "1N")()}
+                    {this.addPlayer1Detective.bind(this, "1N")()}
+                  </td>
+                  <td id="2N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2N")} >
+                    {this.addPlayer0Detective.bind(this, "2N")()}
+                    {this.addPlayer1Detective.bind(this, "2N")()}
+                  </td>
+                  <td id="3N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3N")} >
+                    {this.addPlayer0Detective.bind(this, "3N")()}
+                    {this.addPlayer1Detective.bind(this, "3N")()}
+                  </td>
+                  <td id="4N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4N")} >
+                    {this.addPlayer0Detective.bind(this, "4N")()}
+                    {this.addPlayer1Detective.bind(this, "4N")()}
+                  </td>
+                  <td className="UnusedCell">
+                  </td>
+                </tr>
+                <tr>
+                  <td id="1W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1W")} >
+                    {this.addPlayer0Detective.bind(this, "1W")()}
+                    {this.addPlayer1Detective.bind(this, "1W")()}
+                  </td>
+                  <td className="TileCell">
+                    <img src={this.state.tile0} alt="logo" onClick={this.clickTile0}/>
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileA} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileA} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileA} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td id="1E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1E")} >
+                    {this.addPlayer0Detective.bind(this, "1E")()}
+                    {this.addPlayer1Detective.bind(this, "1E")()}
+                  </td>
+                </tr>
+                <tr>
+                  <td id="2W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2W")} >
+                    {this.addPlayer0Detective.bind(this, "2W")()}
+                    {this.addPlayer1Detective.bind(this, "2W")()}
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileB} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileB} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileB} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileB} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td id="2E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2E")} >
+                    {this.addPlayer0Detective.bind(this, "2E")()}
+                    {this.addPlayer1Detective.bind(this, "2E")()}
+                  </td>
+                </tr>
+                <tr>
+                  <td id="3W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3W")} >
+                    {this.addPlayer0Detective.bind(this, "3W")()}
+                    {this.addPlayer1Detective.bind(this, "3W")()}
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileB} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileB} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileB} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileB} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td id="3E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3E")} >
+                    {this.addPlayer0Detective.bind(this, "3E")()}
+                    {this.addPlayer1Detective.bind(this, "3E")()}
+                  </td>
+                </tr>
+                <tr>
+                  <td id="4W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4W")} >
+                    {this.addPlayer0Detective.bind(this, "4W")()}
+                    {this.addPlayer1Detective.bind(this, "4W")()}
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileB} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileB} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileB} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td className="TileCell">
+                    <img src={tileB} alt="logo" />
+                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                  </td>
+                  <td id="4E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4E")} >
+                    {this.addPlayer0Detective.bind(this, "4E")()}
+                    {this.addPlayer1Detective.bind(this, "4E")()}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="UnusedCell">
+                  </td>
+                  <td id="1S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1S")} >
+                    {this.addPlayer0Detective.bind(this, "1S")()}
+                    {this.addPlayer1Detective.bind(this, "1S")()}
+                  </td>
+                  <td id="2S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2S")} >
+                    {this.addPlayer0Detective.bind(this, "2S")()}
+                    {this.addPlayer1Detective.bind(this, "2S")()}
+                  </td>
+                  <td id="3S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3S")} >
+                    {this.addPlayer0Detective.bind(this, "3S")()}
+                    {this.addPlayer1Detective.bind(this, "3S")()}
+                  </td>
+                  <td id="4S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4S")} >
+                    {this.addPlayer0Detective.bind(this, "4S")()}
+                    {this.addPlayer1Detective.bind(this, "4S")()}
+                  </td>
+                  <td className="UnusedCell">
+                  </td>
+                </tr>
+              </table>
             </td>
-            <td id="1N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1N")} >
-              {this.addPlayer0Detective.bind(this, "1N")()}
-              {this.addPlayer1Detective.bind(this, "1N")()}
-            </td>
-            <td id="2N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2N")} >
-              {this.addPlayer0Detective.bind(this, "2N")()}
-              {this.addPlayer0Detective.bind(this, "2N")()}
-            </td>
-            <td id="3N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3N")} >
-              {this.addPlayer0Detective.bind(this, "3N")()}
-              {this.addPlayer0Detective.bind(this, "3N")()}
-            </td>
-            <td id="4N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4N")} >
-              {this.addPlayer0Detective.bind(this, "4N")()}
-              {this.addPlayer1Detective.bind(this, "4N")()}
-            </td>
-            <td className="UnusedCell">
-            </td>
-          </tr>
-          <tr>
-            <td id="1W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1W")} >
-              {this.addPlayer0Detective.bind(this, "1W")()}
-              {this.addPlayer1Detective.bind(this, "1W")()}
-            </td>
-            <td className="TileCell">
-              <img src={this.state.tile0} alt="logo" onClick={this.clickTile0}/>
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td className="TileCell">
-              <img src={tileA} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td className="TileCell">
-              <img src={tileA} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td className="TileCell">
-              <img src={tileA} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td id="1E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1E")} >
-              {this.addPlayer0Detective.bind(this, "1E")()}
-              {this.addPlayer1Detective.bind(this, "1E")()}
-            </td>
-          </tr>
-          <tr>
-            <td id="2W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2W")} >
-              {this.addPlayer0Detective.bind(this, "2W")()}
-              {this.addPlayer1Detective.bind(this, "2W")()}
-            </td>
-            <td className="TileCell">
-              <img src={tileB} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td className="TileCell">
-              <img src={tileB} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td className="TileCell">
-              <img src={tileB} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td className="TileCell">
-              <img src={tileB} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td id="2E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2E")} >
-              {this.addPlayer0Detective.bind(this, "2E")()}
-              {this.addPlayer1Detective.bind(this, "2E")()}
-            </td>
-          </tr>
-          <tr>
-            <td id="3W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3W")} >
-              {this.addPlayer0Detective.bind(this, "3W")()}
-              {this.addPlayer1Detective.bind(this, "3W")()}
-            </td>
-            <td className="TileCell">
-              <img src={tileB} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td className="TileCell">
-              <img src={tileB} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td className="TileCell">
-              <img src={tileB} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td className="TileCell">
-              <img src={tileB} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td id="3E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3E")} >
-              {this.addPlayer0Detective.bind(this, "3E")()}
-              {this.addPlayer1Detective.bind(this, "3E")()}
-            </td>
-          </tr>
-          <tr>
-            <td id="4W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4W")} >
-              {this.addPlayer0Detective.bind(this, "4W")()}
-              {this.addPlayer1Detective.bind(this, "4W")()}
-            </td>
-            <td className="TileCell">
-              <img src={tileB} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td className="TileCell">
-              <img src={tileB} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td className="TileCell">
-              <img src={tileB} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td className="TileCell">
-              <img src={tileB} alt="logo" />
-              <img src={suspectA} className="Suspect-pos" alt="logo" />
-            </td>
-            <td id="4E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4E")} >
-              {this.addPlayer0Detective.bind(this, "4E")()}
-              {this.addPlayer1Detective.bind(this, "4E")()}
-            </td>
-          </tr>
-          <tr>
-            <td className="UnusedCell">
-            </td>
-            <td id="1S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1S")} >
-              {this.addPlayer0Detective.bind(this, "1S")()}
-              {this.addPlayer1Detective.bind(this, "1S")()}
-            </td>
-            <td id="2S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2S")} >
-              {this.addPlayer0Detective.bind(this, "2S")()}
-              {this.addPlayer1Detective.bind(this, "2S")()}
-            </td>
-            <td id="3S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3S")} >
-              {this.addPlayer0Detective.bind(this, "3S")()}
-              {this.addPlayer1Detective.bind(this, "3S")()}
-            </td>
-            <td id="4S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4S")} >
-              {this.addPlayer0Detective.bind(this, "4S")()}
-              {this.addPlayer1Detective.bind(this, "4S")()}
-            </td>
-            <td className="UnusedCell">
+            <td className="PlayerInfo">
+              dfjkdf
             </td>
           </tr>
         </table>

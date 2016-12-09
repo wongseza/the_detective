@@ -4,6 +4,7 @@
 
 .Board-alignment {
   height: 100%;
+  width: 100%;
 }
 
 table {
@@ -15,8 +16,8 @@ table {
   padding: 0;
   margin: 0;
   border-width: 0px;
-  height: 180px;
-  width: 180px;
+  height: 120px;
+  width: 120px;
 }
 
 .TileCell img {
@@ -24,14 +25,16 @@ table {
   top: 0px;
   left: 0px;
   z-index: 1;
+  height: 120px;
+  width: 120px;
 }
 
 .TileCell .Suspect-pos {
   position: absolute;
-  top: 60px;
-  left: 60px;
-  height: 60px;
-  width: 60px;
+  top: 40px;
+  left: 40px;
+  height: 40px;
+  width: 40px;
   z-index: 2;
 }
 
@@ -40,8 +43,8 @@ table {
   padding: 0;
   margin: 0;
   border-width: 0px;
-  height: 180px;
-  width: 180px;
+  height: 120px;
+  width: 120px;
 }
 
 /*.DetectiveCell:hover {
@@ -50,10 +53,10 @@ table {
 
 .DetectiveCell img {
   position: absolute;
-  top: 60px;
-  left: 60px;
-  height: 60px;
-  width: 60px;
+  top: 40px;
+  left: 40px;
+  height: 40px;
+  width: 40px;
   z-index: 1;
 }
 
@@ -62,7 +65,15 @@ table {
   padding: 0;
   margin: 0;
   border-width: 0px;
-  height: 180px;
-  width: 180px;
+  height: 120px;
+  width: 120px;
   background-color: darkorange;
+}
+
+.PlayerInfo {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  border-width: 0px;
+  background-color: dodgerblue;
 }
