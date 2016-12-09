@@ -152,8 +152,8 @@ var Lobby = React.createClass({
         var statusRef = firebase.database().ref('games/' + key + '/status');
         statusRef.set("full");
 
-        var player1Ref = firebase.database().ref('games/' + key + '/players/player1')
-        player1Ref.set({
+        var player2Ref = firebase.database().ref('games/' + key + '/players/player2')
+        player2Ref.set({
           id: this.props.userId,
           ready: false
         });
@@ -168,7 +168,7 @@ var Lobby = React.createClass({
     var gameRef = gamesRef.push({
       players: 
       {
-        player0: 
+        player1: 
         {
           id: this.props.userId, 
           ready: false
