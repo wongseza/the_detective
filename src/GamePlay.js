@@ -57,6 +57,8 @@ var GamePlay = React.createClass({
     var tile4x3 = firebase.database().ref('games/'+ this.props.gameId + '/board/4x3/tile');
     var tile4x4 = firebase.database().ref('games/'+ this.props.gameId + '/board/4x4/tile');
 
+    this.generateGameInfo();
+
     var value = 0;
 
     tile1x1.on('value', function(snapshot) {
@@ -503,6 +505,60 @@ var GamePlay = React.createClass({
     //     this.style.backgroundColor = "none";
     //   }
     // }
+  },
+
+  generateGameInfo: function() {
+    var gamesRef = firebase.database().ref('games/'+ this.props.gameId);
+    gamesRef.update({
+      boardSize: 4,
+      criminal: "007",
+      numPlayer: 2,
+      whoTurn: "Player1"
+    });
+
+    var boardRef = firebase.database().ref('games/'+ this.props.gameId + '/board');
+    var tiles = ['tileA', 'tileB', 'tileC', 'tileD'];
+    var suspects = ['001', '002', '003', '004', '005', '006', '007', '008', '009', '010', 
+                    '011', '012', '013', '014', '015', '016', '017', '018', '019', '020'];
+    var shuffledSuspects = suspects.sort(function(){return .5 - Math.random()});
+
+    for (var i = 0; i < 4; i++) {
+      for (var j = 0; j < 4; j++) {
+        var key = (i + 1).toString() + "x" + (j + 1).toString();
+        boardRef.update({
+          [key]: {
+            suspect: shuffledSuspects[4 * i + j],
+            tile: tiles[Math.floor(Math.random() * 4)]
+          }
+        });
+      }
+    }
+
+    var locations = ['1N', '2N', '3N', '4N', '1S', '2S', '3S', '4S', 
+                    '1W', '2W', '3W', '4W', '1E', '2E', '3E', '4E'];
+    var shuffledLocations = locations.sort(function(){return .5 - Math.random()});
+
+    var player1Ref = firebase.database().ref('games/'+ this.props.gameId + '/players/player1');
+    player1Ref.update({
+      color: "red",
+      detective1: shuffledLocations[0],
+      detective2: shuffledLocations[1],
+    });
+
+    var player2Ref = firebase.database().ref('games/'+ this.props.gameId + '/players/player2');
+    player2Ref.update({
+      color: "blue",
+      detective1: shuffledLocations[2],
+      detective2: shuffledLocations[3],
+    });
+
+    var player1SuspectsRef = firebase.database().ref('games/'+ this.props.gameId + '/players/player1/suspects');
+    var player2SuspectsRef = firebase.database().ref('games/'+ this.props.gameId + '/players/player2/suspects');
+    for (var i = 0; i < 16; i++) {
+      var shuffledSuspect = shuffledSuspects[i];
+      player1SuspectsRef.update({[shuffledSuspect]: ""});
+      player2SuspectsRef.update({[shuffledSuspect]: ""});
+    }
   },
 
   addplayer1Detective: function(id) {
