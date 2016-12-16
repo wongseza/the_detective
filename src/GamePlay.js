@@ -615,6 +615,101 @@ var GamePlay = React.createClass({
     else
       return ("");
   },
+  
+  resolveDetective: function() {
+    var listInTheLight = [];
+    //var detective1 = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.player + '/detective1').val();
+    //var detective2 = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.player + '/detective2').val();
+    var detective1 = '3N';
+    var detective2 = '4W';
+
+    listInTheLight.concat(this.resolvePerDetective(detective1));
+    listInTheLight.concat(this.resolvePerDetective(detective2));
+    // check dark or bright space
+    //var criminal = firebase.database().ref('games/'+ this.props.gameId + '/criminal').val();;
+    var criminal = '007';
+    var IsCriminalInBright = (listInTheLight.indexOf(criminal) >= 0);
+
+    //var suspectsRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.player + '/suspects');
+    var suspects = ["005", "004", "007", "003", "015", "020", "019", "016", "011", "014", "001", "010", "009", "006", "002", "012"];
+    for (var suspect in suspects) {
+      if (IsCriminalInBright) {
+        if (listInTheLight.indexOf(suspect) < 0) {
+          //var suspectRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.player + '/suspects/' + suspect).remove();
+        }
+      } else {
+        if (listInTheLight.indexOf(suspect) >= 0) {
+          //var suspectRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.player + '/suspects/' + suspect).remove();
+        }
+      }
+    }
+  },
+  
+  resolvePerDetective: function(detective) {
+    var listInTheLight = [];
+    var position = detective.charAt(0);
+    var direction = detective.charAt(1);
+
+    switch (direction) {
+    case "N":
+      for (var i = 1; i <= 4; i++) {
+        //var suspect = firebase.database().ref('games/'+ this.props.gameId + '/board/' + i + 'x' + position + '/suspect').val();
+        //var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + i + 'x' + position + '/tile').val();
+        var suspect = i + 'x' + position;
+        var tile = 'tileA';
+        //var see = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/see').val();
+        //var next = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/next').val();
+        var see = true;
+        var next = true;
+        if (see) { listInTheLight.push(suspect); }
+        if (!next) { break; }
+      }
+      break;
+    case "E":
+      for (i = 4; i >= 1; i--) {
+        //var suspect = firebase.database().ref('games/'+ this.props.gameId + '/board/' + position + 'x' + i + '/suspect').val();
+        //var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + position + 'x' + i + '/tile').val();
+        var suspect = position + 'x' + i;
+        var tile = 'tileB';
+        //var see = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/see').val();
+        //var next = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/next').val();
+        var see = true;
+        var next = true;
+        if (see) { listInTheLight.push(suspect); }
+        if (!next) { break; }
+      }
+      break;
+    case "S":
+      for (i = 4; i >= 1; i--) {
+        //var suspect = firebase.database().ref('games/'+ this.props.gameId + '/board/' + i + 'x' + position + '/suspect').val();
+        //var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + i + 'x' + position + '/tile').val();
+        var suspect = i + 'x' + position;
+        var tile = 'tileC';
+        //var see = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/see').val();
+        //var next = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/next').val();
+        var see = true;
+        var next = true;
+        if (see) { listInTheLight.push(suspect); }
+        if (!next) { break; }
+      }
+      break;
+    case "W":
+      for (i = 1; i <= 4; i++) {
+        //var suspect = firebase.database().ref('games/'+ this.props.gameId + '/board/' + position + 'x' + i + '/suspect').val();
+        //var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + position + 'x' + i + '/tile').val();
+        var suspect = position + 'x' + i;
+        var tile = 'tileD';
+        //var see = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/see').val();
+        //var next = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/next').val();
+        var see = true;
+        var next = true;
+        if (see) { listInTheLight.push(suspect); }
+        if (!next) { break; }
+      }
+      break;
+    }
+    return listInTheLight;
+  },
 
   render: function() {
     return (
