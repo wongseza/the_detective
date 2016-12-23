@@ -77,3 +77,61 @@ table {
   border-width: 0px;
   background-color: dodgerblue;
 }
+
+.ActionTable {
+  margin: 20px;
+  background-color: white;
+}
+
+.ActionCell {
+  width: 120px;
+  height: 120px;
+  border: 1px solid lightgray;
+}
+
+.ActionCell img {
+  top: 50px;
+  left: 50px;
+  height: 50px;
+  width: 50px;
+  z-index: 1;
+}
+
+.MessageTable {
+  margin: 20px;
+}
+
+.MessageCell {
+  width: 240px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin: auto;
+  background-color: lightsalmon;
+  text-align: center;
+}
+
+.TurnTable {
+  margin: 20px;
+}
+
+.TurnCell {
+  width: 240px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin: auto;
+  background-color: lightgreen;
+  text-align: center;
+}
+
+.RoundTable {
+  margin: 20px;
+}
+
+.RoundCell {
+  width: 240px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin: auto;
+  background-color: khaki;
+  text-align: center;
+}

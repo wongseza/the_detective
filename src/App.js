@@ -97,6 +97,16 @@ var App = React.createClass({
     return ReactDOM.render(<Action userId="14 34 48" gameId="-KWq-fZKpb-a4lLvug8T"/>,document.getElementById('root'));
   },
 
+  clickGamePlay1: function(e) {
+    console.log('click button to Game Play');
+    return ReactDOM.render(<GamePlay userId="14 34 48" gameId="xxx" playerId="player1"/>,document.getElementById('root'));
+  },
+
+  clickGamePlay2: function(e) {
+    console.log('click button to Game Play');
+    return ReactDOM.render(<GamePlay userId="14 34 48" gameId="xxx" playerId="player2"/>,document.getElementById('root'));
+  },
+
   render: function() {
     return (
       <div className="App">
@@ -116,6 +126,8 @@ var App = React.createClass({
         <input type="button" onClick={this.clickLobby} value="To Lobby" />
         <input type="button" onClick={this.clickGamePlay} value="To GamePlay" />
         <input type="button" onClick={this.clickAction} value="To Action" />
+        <input type="button" onClick={this.clickGamePlay1} value="To GamePlay (P1)" />
+        <input type="button" onClick={this.clickGamePlay2} value="To GamePlay (P2)" />
       </div>
     );
   }

@@ -53,8 +53,40 @@ var GamePlay = React.createClass({
       player1Detective1: "1N",
       player1Detective2: "2N",
       player2Detective1: "3N",
-      player2Detective2: "4N"
+      player2Detective2: "4N",
+      selectedAction: 0,
+      movedDetective1: 0,
+      movedDetective2: 0,
+      message: "",
+      turn: "",
+      whoTurn: "",
+      isAction1Avaliable: true,
+      isAction2Avaliable: true,
+      isAction3Avaliable: true,
+      isAction4Avaliable: true,
+      round: 0
     };
+  },
+
+  randomMovedDetective: function() {
+    var detective1 = Math.floor(Math.random() * 2);
+    var detective2 = Math.floor(Math.random() * 2);
+    var game = firebase.database().ref('games/'+ this.props.gameId);
+    game.update({
+      movedDetective1: detective1,
+      movedDetective2: detective2
+    });
+  },
+
+  resetAction: function() {
+    var game = firebase.database().ref('games/'+ this.props.gameId);
+    game.update({
+      selectedAction: 0,
+      isAction1Avaliable: true,
+      isAction2Avaliable: true,
+      isAction3Avaliable: true,
+      isAction4Avaliable: true,
+    });
   },
 
   componentWillMount: function() {
@@ -75,8 +107,143 @@ var GamePlay = React.createClass({
     var tile4x2 = firebase.database().ref('games/'+ this.props.gameId + '/board/4x2/tile');
     var tile4x3 = firebase.database().ref('games/'+ this.props.gameId + '/board/4x3/tile');
     var tile4x4 = firebase.database().ref('games/'+ this.props.gameId + '/board/4x4/tile');
+    var game = firebase.database().ref('games/'+ this.props.gameId);
+    var whoTurn = firebase.database().ref('games/'+ this.props.gameId + '/whoTurn');
+    var movedDetective1 = firebase.database().ref('games/'+ this.props.gameId + '/movedDetective1');
+    var movedDetective2 = firebase.database().ref('games/'+ this.props.gameId + '/movedDetective2');
+    var selectedAction = firebase.database().ref('games/'+ this.props.gameId + '/selectedAction');
+    var isAction1Avaliable = firebase.database().ref('games/'+ this.props.gameId + '/isAction1Avaliable');
+    var isAction2Avaliable = firebase.database().ref('games/'+ this.props.gameId + '/isAction2Avaliable');
+    var isAction3Avaliable = firebase.database().ref('games/'+ this.props.gameId + '/isAction3Avaliable');
+    var isAction4Avaliable = firebase.database().ref('games/'+ this.props.gameId + '/isAction4Avaliable');
+    var round = firebase.database().ref('games/'+ this.props.gameId + '/round');
 
-    this.generateGameInfo();
+    if (this.props.playerId === "player1")
+    {
+      this.generateGameInfo();
+    }
+    this.resetAction();
+
+    round.on('value', function(snapshot) {
+      value = snapshot.val();
+      this.setState({
+        round: value
+      });
+      if (this.props.playerId === "player1")
+      {
+        this.randomMovedDetective();
+      }
+      this.resetAction();
+    }.bind(this))
+
+    isAction1Avaliable.on('value', function(snapshot) {
+      value = snapshot.val();
+      this.setState({
+        isAction1Avaliable: value
+      });
+      if (!value)
+        document.getElementById("action1").style.backgroundColor = "dimgray";
+    }.bind(this))
+
+    isAction2Avaliable.on('value', function(snapshot) {
+      value = snapshot.val();
+      this.setState({
+        isAction2Avaliable: value
+      });
+      if (!value)
+        document.getElementById("action2").style.backgroundColor = "dimgray";
+    }.bind(this))
+
+    isAction3Avaliable.on('value', function(snapshot) {
+      value = snapshot.val();
+      this.setState({
+        isAction3Avaliable: value
+      });
+      if (!value)
+        document.getElementById("action3").style.backgroundColor = "dimgray";
+    }.bind(this))
+
+    isAction4Avaliable.on('value', function(snapshot) {
+      value = snapshot.val();
+      this.setState({
+        isAction4Avaliable: value
+      });
+      if (!value)
+        document.getElementById("action4").style.backgroundColor = "dimgray";
+    }.bind(this))
+
+    whoTurn.on('value', function(snapshot) {
+      var value = snapshot.val();
+      var turn = (this.props.playerId === value) ? "It's your turn!" : "It's your opponent's turn!";
+      var message = (this.props.playerId === value) ? "Please select an action." : "Please wait.";
+      
+      this.setState({
+        whoTurn: value,
+        turn: turn,
+        message: message
+      });
+
+    }.bind(this))
+
+    movedDetective1.on('value', function(snapshot) {
+      value = snapshot.val();
+      this.setState({
+        movedDetective1: (value === 0) ? detectiveA : detectiveB
+      });
+    }.bind(this))
+
+    movedDetective2.on('value', function(snapshot) {
+      value = snapshot.val();
+      this.setState({
+        movedDetective2: (value === 0) ? detectiveC : detectiveD
+      });
+    }.bind(this))
+
+    selectedAction.on('value', function(snapshot) {
+      value = snapshot.val();
+      this.setState({
+        selectedAction: value
+      });
+
+      switch(value)
+      {
+        case 1:
+          this.setState({
+            message: "Move Detective 1 is selected."
+          });
+          break;
+        case 2:
+          this.setState({
+            message: "Move Detective 2 is selected."
+          });
+          break;
+        case 3:
+          this.setState({
+            message: "Swap is selected."
+          });
+          break;
+        case 4:
+          this.setState({
+            message: "Rotate is selected."
+          });
+          break;
+      }
+
+      for (var i = 0; i < 4; i++)
+      {
+        document.getElementById("action" + (i + 1).toString()).style.backgroundColor = (i + 1 === value) ? "lightpink" : "white";
+      }
+
+      if (!this.state.isAction1Avaliable)
+        document.getElementById("action1").style.backgroundColor = "dimgray";
+      if (!this.state.isAction2Avaliable)
+        document.getElementById("action2").style.backgroundColor = "dimgray";
+      if (!this.state.isAction3Avaliable)
+        document.getElementById("action3").style.backgroundColor = "dimgray";
+      if (!this.state.isAction4Avaliable)
+        document.getElementById("action4").style.backgroundColor = "dimgray";
+
+    }.bind(this))
 
     var value = 0;
 
@@ -541,18 +708,10 @@ var GamePlay = React.createClass({
   },
 
   generateGameInfo: function() {
-    var gamesRef = firebase.database().ref('games/'+ this.props.gameId);
-    gamesRef.update({
-      boardSize: 4,
-      criminal: "007",
-      numPlayer: 2,
-      whoTurn: "Player1"
-    });
-
     var boardRef = firebase.database().ref('games/'+ this.props.gameId + '/board');
     var tiles = ['tileA', 'tileB', 'tileC', 'tileD'];
     var suspects = ['001', '002', '003', '004', '005', '006', '007', '008', '009', '010', 
-                    '011', '012', '013', '014', '015', '016', '017', '018', '019', '020'];
+                    '011', '012', '013', '014', '015', '016'];
     var shuffledSuspects = suspects.sort(function(){return .5 - Math.random()});
 
     for (var i = 0; i < 4; i++) {
@@ -587,11 +746,23 @@ var GamePlay = React.createClass({
 
     var player1SuspectsRef = firebase.database().ref('games/'+ this.props.gameId + '/players/player1/suspects');
     var player2SuspectsRef = firebase.database().ref('games/'+ this.props.gameId + '/players/player2/suspects');
+    player1SuspectsRef.remove();
+    player2SuspectsRef.remove();
+
     for (var i = 0; i < 16; i++) {
       var shuffledSuspect = shuffledSuspects[i];
       player1SuspectsRef.update({[shuffledSuspect]: ""});
       player2SuspectsRef.update({[shuffledSuspect]: ""});
     }
+
+    var gamesRef = firebase.database().ref('games/'+ this.props.gameId);
+    gamesRef.update({
+      boardSize: 4,
+      criminal: shuffledSuspects[Math.floor(Math.random() * 16)],
+      numPlayer: 2,
+      whoTurn: "player1",
+      round: 1
+    });
   },
 
   addPlayer1Detective: function(id) {
@@ -709,6 +880,103 @@ var GamePlay = React.createClass({
       break;
     }
     return listInTheLight;
+  },
+
+  clickMoveDetective1: function(){
+    if (this.state.whoTurn === this.props.playerId && this.state.isAction1Avaliable)
+    {
+      var game = firebase.database().ref('games/'+ this.props.gameId);
+      game.update({
+        selectedAction: 1
+      });
+    }
+  },
+
+  clickMoveDetective2: function(){
+    if (this.state.whoTurn === this.props.playerId && this.state.isAction2Avaliable)
+    {
+      var game = firebase.database().ref('games/'+ this.props.gameId);
+      game.update({
+        selectedAction: 2
+      });
+    }
+  },
+
+  clickSwap: function(){
+    if (this.state.whoTurn === this.props.playerId && this.state.isAction3Avaliable)
+    {
+      var game = firebase.database().ref('games/'+ this.props.gameId);
+      game.update({
+        selectedAction: 3
+      });
+    }
+  },
+
+  clickRotate: function(){
+    if (this.state.whoTurn === this.props.playerId && this.state.isAction4Avaliable)
+    {
+      var game = firebase.database().ref('games/'+ this.props.gameId);
+      game.update({
+        selectedAction: 4
+      });
+    }
+  },
+
+  applyAction: function(){
+    if (this.state.whoTurn === this.props.playerId)
+    {
+      if (this.state.selectedAction === 0)
+        alert("Please select an action.");
+      else
+      {
+        var game = firebase.database().ref('games/' + this.props.gameId);
+        var variable = "None";
+        switch(this.state.selectedAction)
+        {
+          case 1:
+            variable = "isAction1Avaliable";
+            break;
+          case 2:
+            variable = "isAction2Avaliable";
+            break;
+          case 3:
+            variable = "isAction3Avaliable";
+            break;
+          case 4:
+            variable = "isAction4Avaliable";
+            break;
+        }
+        if (variable != "None")
+        {
+          game.update({
+            [variable]: false
+          }).then(function(){
+            game.once('value', function(snapshot) {
+              var value = snapshot.val();
+              if (value.whoTurn === "player1")
+              {
+                game.update({
+                  whoTurn: "player2"
+                });
+              }
+              else
+              {
+                game.update({
+                  whoTurn: "player1"
+                });
+              }
+
+              if(!value.isAction1Avaliable && !value.isAction2Avaliable && !value.isAction3Avaliable && !value.isAction4Avaliable)
+              {
+                game.update({
+                  round: value.round + 1
+                });
+              }
+            });
+          });
+        }
+      }
+    }
   },
 
   render: function() {
@@ -869,7 +1137,48 @@ var GamePlay = React.createClass({
               </table>
             </td>
             <td className="PlayerInfo">
-              dfjkdf
+              <table className="RoundTable">
+                <tr>
+                  <td className="RoundCell">
+                    Round {this.state.round}
+                  </td>
+                </tr>
+              </table>
+              <table className="ActionTable">
+                <tr>
+                  <td id="action1" className="ActionCell" onClick={this.clickMoveDetective1.bind(this)}>
+                    Move<br/><br/>
+                    <img src={this.state.movedDetective1} alt="logo" />
+                  </td>
+                  <td id="action2" className="ActionCell" onClick={this.clickMoveDetective2.bind(this)}>
+                    Move<br/><br/>
+                    <img src={this.state.movedDetective2} alt="logo" />
+                  </td>
+                </tr>
+                <tr>
+                  <td id="action3" className="ActionCell" onClick={this.clickSwap.bind(this)}>
+                    Swap
+                  </td>
+                  <td id="action4" className="ActionCell" onClick={this.clickRotate.bind(this)}>
+                    Rotate
+                  </td>
+                </tr>
+              </table>
+              <input type="button" value="Apply Action" className="action-button" onClick={this.applyAction.bind(this)} />
+              <table className="TurnTable">
+                <tr>
+                  <td className="TurnCell">
+                    {this.state.turn}
+                  </td>
+                </tr>
+              </table>
+              <table className="MessageTable">
+                <tr>
+                  <td className="MessageCell">
+                    {this.state.message}
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
         </table>
