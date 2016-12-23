@@ -69,12 +69,12 @@ var App = React.createClass({
 
   clickWaitRoom: function(e) {
     console.log('click button to wait room');
-    return ReactDOM.render(<WaitRoom userId="14 34 48" gameId="-KWq-fZKpb-a4lLvug8T"/>,document.getElementById('root'));
+    return ReactDOM.render(<WaitRoom userId="Z8q9ND5Vg0e7xswkiug7Z9ZHMc53" gameId="-KXzK8z50N7nbB3Ff4tZ"/>,document.getElementById('root'));
   },
 
   clickEndGame: function(e) {
     console.log('click button to end game');
-    return ReactDOM.render(<EndGame userId='14 34 48' gameId="-KWq-fZKpb-a4lLvug8T" />,document.getElementById('root'));
+    return ReactDOM.render(<EndGame userId='14 34 48' gameId="-KXzK8z50N7nbB3Ff4tZ" />,document.getElementById('root'));
   },
   
   clickToLogin: function(e) {

@@ -22,31 +22,35 @@ var WaitRoom = React.createClass({
     return {
       playerTable: "",
       isReady:false,
-      buttonName:"Ready"
+      buttonName:"Ready now, click to pending"
     };
   },
 
   toggleButton: function() {
     console.log("toggleButton " + this.state.isReady);
-    if (this.state.isReady) {
-      this.setState( {
-        isReady:false,
-        buttonName:"Not Ready"
-      } );
-    } else {
-      this.setState( {
-        isReady:true,
-        buttonName:"Ready"
-      } );
-    }
+    
+    gameRef.update({
+      
+
+    });
+    // if (this.state.isReady) {
+    //   this.setState( {
+    //     isReady:false,
+    //     buttonName:"Pending. Click when ready"
+    //   } );
+    // } else {
+    //   this.setState( {
+    //     isReady:true,
+    //     buttonName:"Ready now, click to pending"
+    //   } );
+    // }
   },
 
   componentWillMount: function() {
-    var firebasePath = 'games/' + this.props.gameId;
-    gameRef = firebase.database().ref(firebasePath);
-    // userRef = firebase.database().ref(firebasePath + '/players/' + this.props.userId);
+    gameRef = firebase.database().ref('games/' + this.props.gameId);
+    // userRef = firebase.database().ref('users/' + this.props.userId);
     console.log("reading data from firebase path " + gameRef);
-    console.log("reading data from firebase path " + userRef);
+    // console.log("reading data from firebase path " + userRef);
     
     gameRef.on('value',function(snapshot) {
       if (this.isMounted()) {
@@ -77,13 +81,21 @@ var WaitRoom = React.createClass({
         {
           var player = game.players[playerList[i]];
           console.log(player);
+
+          var email;
+          userRef = firebase.database().ref('users/' + player.id);
+          console.log("reading data from firebase path " + userRef);
+          userRef.on('value',function(snapshot)  {
+            email = snapshot.val().email;
+          }.bind(this));
+          
           
           j++;
           if (player.id === this.props.userId) { // display button
             rows.push(
               <tr className="player-table">
                 <td className="player-table">{j}.</td>
-                <td className="player-table">{player.id}</td>
+                <td className="player-table">{email}</td>
                 <td className="player-table"><input type="button" value={this.state.buttonName} onClick={this.toggleButton} /></td>
               </tr>
             );
@@ -92,14 +104,14 @@ var WaitRoom = React.createClass({
               this.setState( {
                 playerTable: table,
                 isReady:true,
-                buttonName:"Ready"
+                buttonName:"Ready now, click to pending"
               } );
               
             } else {
               this.setState( {
                 playerTable: table,
                 isReady:false,
-                buttonName:"Ready"
+                buttonName:"Pending. Click when ready"
               } );
             }
             
@@ -111,7 +123,7 @@ var WaitRoom = React.createClass({
             rows.push(
               <tr className="player-table">
                 <td className="player-table">{j}.</td>
-                <td className="player-table">{player.id}</td>
+                <td className="player-table">{email}</td>
                 <td className="player-table">{text}</td>
               </tr>
             );
@@ -135,8 +147,17 @@ var WaitRoom = React.createClass({
   },
 
   clickLobby: function(e) {
-    console.log('click Lobby button');
-    return ReactDOM.render(<App />,document.getElementById('root'));
+    console.log('Updating room status + ' + gameRef);
+
+    gameRef.child(this.props.userId).remove().then((ref) => {
+
+    gameRef.update({
+      status: "waiting"
+    }).then((ref) => {
+      ReactDOM.render(<App />,document.getElementById('root'));
+    });
+    });
+    //return ReactDOM.render(<App />,document.getElementById('root'));
   },
 
   render: function() {
