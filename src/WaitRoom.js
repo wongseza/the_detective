@@ -28,22 +28,33 @@ var WaitRoom = React.createClass({
 
   toggleButton: function() {
     console.log("toggleButton " + this.state.isReady);
-    
-    gameRef.update({
-      
 
+    var player0IdRef = firebase.database().ref('games/' + this.props.gameId + '/players/player0');
+    var player1IdRef = firebase.database().ref('games/' + this.props.gameId + '/players/player1');
+    var player0Id;
+    var player1Id;
+
+    player0IdRef.once('value', function(snapshot) {
+      player0Id = snapshot.val();
+    }.bind(this))
+
+    player1IdRef.once('value', function(snapshot) {
+      player1Id = snapshot.val();
+    }.bind(this))
+
+    if (this.props.userId === player0Id.id) {
+      player0IdRef.update({
+        ready: true,
+      });
+    } else {
+      player1IdRef.update({
+        ready: true,
+      });
+    }
+
+    this.setState({
+      isReady: true
     });
-    // if (this.state.isReady) {
-    //   this.setState( {
-    //     isReady:false,
-    //     buttonName:"Pending. Click when ready"
-    //   } );
-    // } else {
-    //   this.setState( {
-    //     isReady:true,
-    //     buttonName:"Ready now, click to pending"
-    //   } );
-    // }
   },
 
   componentWillMount: function() {
