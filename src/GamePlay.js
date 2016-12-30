@@ -1138,6 +1138,9 @@ var GamePlay = React.createClass({
             </td>
             <td className="PlayerInfo">
               <table className="RoundTable">
+                <tr><td className="PlayerCell">
+                  {this.props.playerId} {this.props.userName}
+                </td></tr>
                 <tr>
                   <td className="RoundCell">
                     Round {this.state.round}

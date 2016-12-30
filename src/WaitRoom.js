@@ -186,7 +186,7 @@ var WaitRoom = React.createClass({
         if (allReady) {
             var player = "player" + currentPlayerNum;
             console.log('To game play ' + player + ' ' + this.props.gameId);
-            return ReactDOM.render(<GamePlay userId={this.props.userId} gameId={this.props.gameId} playerId={player}/>,document.getElementById('root'));
+            return ReactDOM.render(<GamePlay userId={this.props.userId} gameId={this.props.gameId} playerId={player} userName={currentUser}/>,document.getElementById('root'));
         } else {
             window.alert('Please wait for all players to be ready');
         }

@@ -89,7 +89,7 @@ var App = React.createClass({
 
   clickGamePlay: function(e) {
     console.log('click button to Game Play');
-    return ReactDOM.render(<GamePlay userId="14 34 48" gameId="-KWq-fZKpb-a4lLvug8T" playerId="player1"/>,document.getElementById('root'));
+    return ReactDOM.render(<GamePlay userId="14 34 48" gameId="-KWq-fZKpb-a4lLvug8T" playerId="player1" userName="Conan"/>,document.getElementById('root'));
   },
 
   clickAction: function(e) {
@@ -99,12 +99,12 @@ var App = React.createClass({
 
   clickGamePlay1: function(e) {
     console.log('click button to Game Play');
-    return ReactDOM.render(<GamePlay userId="14 34 48" gameId="xxx" playerId="player1"/>,document.getElementById('root'));
+    return ReactDOM.render(<GamePlay userId="14 34 48" gameId="xxx" playerId="player1" userName="Conan"/>,document.getElementById('root'));
   },
 
   clickGamePlay2: function(e) {
     console.log('click button to Game Play');
-    return ReactDOM.render(<GamePlay userId="14 34 48" gameId="xxx" playerId="player2"/>,document.getElementById('root'));
+    return ReactDOM.render(<GamePlay userId="14 34 48" gameId="xxx" playerId="player2" userName="Mouri"/>,document.getElementById('root'));
   },
 
   render: function() {
