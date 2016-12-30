@@ -41,6 +41,25 @@ var detectiveMoveMapping = {
   "4W" : "3W,2W,1S,2S"
 };
 
+var stateMachine = {
+  "selectAction" : "moveTile,rotateTile,moveP1D1,moveP1D2,moveP2D1,moveP2D2",
+  "rotateTile" : "rotatedTileSelected",
+  "moveTile" : "srcMoveTileSelected,",
+  "srcMoveTileSelected" : "selectAction, randomAction",
+  "randomAction" : "selectAction",
+  "rotateTile" : "srcRotateTileSelected",
+  "srcRotateTileSelected" : "selectAction, randomAction",
+  "moveP1D1" : "P1D1Selected",
+  "P1D1Selected" : "selectAction, randomAction"
+};
+
+var tileValueMapping = {
+  "tileA" : tileA,
+  "tileB" : tileB,
+  "tileC" : tileC,
+  "tileD" : tileD
+};
+
 var GamePlay = React.createClass({
 
   getInitialState: function() {
@@ -64,7 +83,11 @@ var GamePlay = React.createClass({
       isAction2Avaliable: true,
       isAction3Avaliable: true,
       isAction4Avaliable: true,
-      round: 0
+      round: 0,
+      playerState: "selectAction",
+      selectedTile: "5x5", // Initialized to invalid tile id
+      selectedTileValue: "tileA",
+      selectedTileCurValue: tileA
     };
   },
 
@@ -638,61 +661,115 @@ var GamePlay = React.createClass({
   },
 
   clickTile: function(tileId) {
-    var tileValue = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId + '/tile');
-    console.log(tileId);
-    var value = 0;
-    var newValue = 0;
+    if (this.state.whoTurn === this.props.playerId) {
+      if (this.state.playerState === "rotateTile") {
+        var tileValue = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId + '/tile');
+        var value = 0;
 
-    tileValue.once('value', function(snapshot) {
-      value = snapshot.val();
+        tileValue.once('value', function(snapshot) {
+          value = snapshot.val();
+        });
 
-      switch (value) {
-        case "tileA":
-          newValue = "tileB";
-          break;
-        case "tileB":
-          newValue = "tileC";
-          break;
-        case "tileC":
-          newValue = "tileD";
-          break;
-        case "tileD":
-          newValue = "tileA";
-          break;
-        default:
-          newValue = "tileA";
+        this.setState({
+          playerState: "rotateTileSelected",
+          selectedTile: tileId,
+          selectedTileValue: value,
+          selectedTileCurValue: tileValueMapping[value]
+        });
+
+        return;
       }
-    });
 
-    var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId);
-    tile.update({
-      tile: newValue
-    })
+      if (this.state.playerState == "rotateTileSelected" && this.state.selectedTile != tileId) {
+        // Reset the previous tile state
+        var key = "tile" + this.state.selectedTile;
+        var prevTileValue = this.state.selectedTileCurValue;
 
-    return ;
+        this.setState({
+          [key] : prevTileValue
+        });
+
+        // Keep the current tile state
+        var tileValue = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId + '/tile');
+        var value = 0;
+
+        tileValue.once('value', function(snapshot) {
+          value = snapshot.val();
+        });
+
+        this.setState({
+          selectedTile: tileId,
+          selectedTileValue: value,
+          selectedTileCurValue: tileValueMapping[value]
+        });
+
+        return;
+      }
+
+      if (this.state.whoTurn === this.props.playerId && this.state.playerState === "rotateTileSelected" && this.state.selectedTile === tileId) {
+        var newValue = 0;
+        var newValue2 = tileA;
+        var key = "tile" + tileId;
+
+        switch (this.state.selectedTileValue) {
+          case "tileA":
+            newValue = "tileB";
+            newValue2 = tileB;
+            break;
+          case "tileB":
+            newValue = "tileC";
+            newValue2 = tileC;
+            break;
+          case "tileC":
+            newValue = "tileD";
+            newValue2 = tileD;
+            break;
+          case "tileD":
+            newValue = "tileA";
+            newValue2 = tileA;
+            break;
+          default:
+            newValue = "tileA";
+            newValue2 = tileA;
+        }
+
+        this.setState({
+          selectedTileValue: newValue,
+          [key]: newValue2
+        });
+      }
+    }
   },
 
-  clickDetectiveTile: function(id) {
-    var cells = document.getElementsByClassName("DetectiveCell");
+  clickDetective: function(id) {
+    if (this.state.whoTurn === this.props.playerId) {
+      if ( (this.state.playerState === "movedDetective1" &&
+        ((this.state.movedDetective1 === detectiveA && this.state.player1Detective1 === id) ||
+        (this.state.movedDetective1 === detectiveB && this.state.player1Detective2 === id))) ||
+        (this.state.playerState === "movedDetective2" &&
+        ((this.state.movedDetective2 === detectiveC && this.state.player2Detective1 === id) ||
+        (this.state.movedDetective2 === detectiveD && this.state.player2Detective2 === id))) ) {
 
-    for (var i=0,len=cells.length; i<len; i++){
-      cells[i].style.backgroundColor = "";
-    }
+        var cells = document.getElementsByClassName("DetectiveCell");
 
-    var isDetectiveOnTile = false;
-    if (this.state.player1Detective1 === id || this.state.player1Detective2 === id || this.state.player2Detective1 === id || this.state.player2Detective2 === id)
-      isDetectiveOnTile = true;
+        for (var i=0,len=cells.length; i<len; i++) {
+          cells[i].style.backgroundColor = "";
+        }
 
-    if (isDetectiveOnTile) {
-      var activeCell = document.getElementById(id);
-      activeCell.style.backgroundColor = "lightslategray";
+        var activeCell = document.getElementById(id);
+        activeCell.style.backgroundColor = "slategrey";
 
-      var locations = detectiveMoveMapping[id];
-      var loc = locations.split(",");
+        var locations = detectiveMoveMapping[id];
+        var loc = locations.split(",");
 
-      for (var i=0,len=loc.length; i<len; i++){
-        var activeCell = document.getElementById(loc[i]);
-        activeCell.style.backgroundColor = "lightslategray";
+        for (var i=0,len=loc.length; i<len; i++) {
+          if (loc[i] != this.state.player1Detective1 && loc[i] != this.state.player1Detective2 &&
+            loc[i] != this.state.player2Detective1 && loc[i] != this.state.player2Detective2) {
+
+            var activeCell = document.getElementById(loc[i]);
+            activeCell.style.backgroundColor = "lightgrey";
+          }
+        }
       }
     }
     
@@ -766,23 +843,21 @@ var GamePlay = React.createClass({
   },
 
   addPlayer1Detective: function(id) {
-    console.log("add detective " + id);
 
     if (this.state.player1Detective1 === id)
-      return (<img src={detectiveA} alt="logo" />);
+      return (<img src={detectiveA} alt="logo" onClick={this.clickDetective.bind(this, id)} />);
     else if (this.state.player1Detective2 === id)
-      return (<img src={detectiveB} alt="logo" />);
+      return (<img src={detectiveB} alt="logo" onClick={this.clickDetective.bind(this, id)} />);
     else
       return ("");
   },
 
   addPlayer2Detective: function(id) {
-    console.log("add detective " + id);
 
     if (this.state.player2Detective1 === id)
-      return (<img src={detectiveC} alt="logo" />);
+      return (<img src={detectiveC} alt="logo" onClick={this.clickDetective.bind(this, id)} />);
     else if (this.state.player2Detective2 === id)
-      return (<img src={detectiveD} alt="logo" />);
+      return (<img src={detectiveD} alt="logo" onClick={this.clickDetective.bind(this, id)} />);
     else
       return ("");
   },
@@ -885,30 +960,111 @@ var GamePlay = React.createClass({
   clickMoveDetective1: function(){
     if (this.state.whoTurn === this.props.playerId && this.state.isAction1Avaliable)
     {
+      if (this.state.playerState != "selectAction") {
+        // Reset other state
+        if (this.state.playerState === "rotateTileSelected") {
+          var key = "tile" + this.state.selectedTile;
+          var prevTileValue = this.state.selectedTileCurValue;
+
+          this.setState({
+            [key]: prevTileValue,
+            selectedTile: "5x5",
+            selectedTileValue: tileA,
+            selectedTileCurValue: tileA
+          });
+        }
+      }
+
       var game = firebase.database().ref('games/'+ this.props.gameId);
       game.update({
         selectedAction: 1
       });
+
+      if (this.state.playerState != "movedDetective1") {
+        var cells = document.getElementsByClassName("DetectiveCell");
+
+        for (var i=0,len=cells.length; i<len; i++) {
+          cells[i].style.backgroundColor = "";
+        }
+
+        this.setState({
+          playerState: "movedDetective1"
+        });
+      }
     }
   },
 
   clickMoveDetective2: function(){
     if (this.state.whoTurn === this.props.playerId && this.state.isAction2Avaliable)
     {
+      if (this.state.playerState != "selectAction") {
+        // Reset other state
+        if (this.state.playerState === "rotateTileSelected") {
+          var key = "tile" + this.state.selectedTile;
+          var prevTileValue = this.state.selectedTileCurValue;
+
+          this.setState({
+            [key]: prevTileValue,
+            selectedTile: "5x5",
+            selectedTileValue: tileA,
+            selectedTileCurValue: tileA
+          });
+        }
+      }
+
       var game = firebase.database().ref('games/'+ this.props.gameId);
       game.update({
         selectedAction: 2
       });
+
+      if (this.state.playerState != "movedDetective2") {
+        var cells = document.getElementsByClassName("DetectiveCell");
+
+        for (var i=0,len=cells.length; i<len; i++) {
+          cells[i].style.backgroundColor = "";
+        }
+
+        this.setState({
+          playerState: "movedDetective2"
+        });
+      }
     }
   },
 
   clickSwap: function(){
     if (this.state.whoTurn === this.props.playerId && this.state.isAction3Avaliable)
     {
+      if (this.state.playerState != "selectAction") {
+        // Reset other state
+        if (this.state.playerState === "rotateTileSelected") {
+          var key = "tile" + this.state.selectedTile;
+          var prevTileValue = this.state.selectedTileCurValue;
+
+          this.setState({
+            [key]: prevTileValue,
+            selectedTile: "5x5",
+            selectedTileValue: tileA,
+            selectedTileCurValue: tileA
+          });
+        }
+      }
+      
       var game = firebase.database().ref('games/'+ this.props.gameId);
       game.update({
         selectedAction: 3
       });
+
+      if (this.state.playerState != "swap") {
+        var cells = document.getElementsByClassName("DetectiveCell");
+
+        for (var i=0,len=cells.length; i<len; i++) {
+          cells[i].style.backgroundColor = "";
+        }
+
+        this.setState({
+          playerState: "swap"
+        });
+      }
     }
   },
 
@@ -919,6 +1075,18 @@ var GamePlay = React.createClass({
       game.update({
         selectedAction: 4
       });
+
+      if (this.state.playerState != "rotateTile") {
+        var cells = document.getElementsByClassName("DetectiveCell");
+
+        for (var i=0,len=cells.length; i<len; i++) {
+          cells[i].style.backgroundColor = "";
+        }
+
+        this.setState({
+          playerState: "rotateTile"
+        });
+      }
     }
   },
 
@@ -929,6 +1097,17 @@ var GamePlay = React.createClass({
         alert("Please select an action.");
       else
       {
+        // Apply player action
+        if (this.state.playerState === "rotateTileSelected") {
+          console.log("Apply tile " + this.state.selectedTile + " " + this.state.selectedTileValue)
+
+          var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + this.state.selectedTile);
+          tile.update({
+            tile: this.state.selectedTileValue
+          })
+        }
+        //////////
+
         var game = firebase.database().ref('games/' + this.props.gameId);
         var variable = "None";
         switch(this.state.selectedAction)
@@ -989,19 +1168,19 @@ var GamePlay = React.createClass({
                 <tr>
                   <td className="UnusedCell">
                   </td>
-                  <td id="1N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1N")} >
+                  <td id="1N" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "1N")()}
                     {this.addPlayer2Detective.bind(this, "1N")()}
                   </td>
-                  <td id="2N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2N")} >
+                  <td id="2N" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "2N")()}
                     {this.addPlayer2Detective.bind(this, "2N")()}
                   </td>
-                  <td id="3N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3N")} >
+                  <td id="3N" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "3N")()}
                     {this.addPlayer2Detective.bind(this, "3N")()}
                   </td>
-                  <td id="4N" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4N")} >
+                  <td id="4N" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "4N")()}
                     {this.addPlayer2Detective.bind(this, "4N")()}
                   </td>
@@ -1009,7 +1188,7 @@ var GamePlay = React.createClass({
                   </td>
                 </tr>
                 <tr>
-                  <td id="1W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1W")} >
+                  <td id="1W" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "1W")()}
                     {this.addPlayer2Detective.bind(this, "1W")()}
                   </td>
@@ -1029,13 +1208,13 @@ var GamePlay = React.createClass({
                     <img src={this.state.tile1x4} alt="logo" onClick={this.clickTile.bind(this, "1x4")} />
                     <img src={suspectA} className="Suspect-pos" alt="logo" />
                   </td>
-                  <td id="1E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1E")} >
+                  <td id="1E" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "1E")()}
                     {this.addPlayer2Detective.bind(this, "1E")()}
                   </td>
                 </tr>
                 <tr>
-                  <td id="2W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2W")} >
+                  <td id="2W" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "2W")()}
                     {this.addPlayer2Detective.bind(this, "2W")()}
                   </td>
@@ -1055,13 +1234,13 @@ var GamePlay = React.createClass({
                     <img src={this.state.tile2x4} alt="logo" onClick={this.clickTile.bind(this, "2x4")} />
                     <img src={suspectA} className="Suspect-pos" alt="logo" />
                   </td>
-                  <td id="2E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2E")} >
+                  <td id="2E" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "2E")()}
                     {this.addPlayer2Detective.bind(this, "2E")()}
                   </td>
                 </tr>
                 <tr>
-                  <td id="3W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3W")} >
+                  <td id="3W" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "3W")()}
                     {this.addPlayer2Detective.bind(this, "3W")()}
                   </td>
@@ -1077,17 +1256,17 @@ var GamePlay = React.createClass({
                     <img src={this.state.tile3x3} alt="logo" onClick={this.clickTile.bind(this, "3x3")} />
                     <img src={suspectA} className="Suspect-pos" alt="logo" />
                   </td>
-                  <td className="TileCell">
+                  <td id="3x4" className="TileCell">
                     <img src={this.state.tile3x4} alt="logo" onClick={this.clickTile.bind(this, "3x4")} />
                     <img src={suspectA} className="Suspect-pos" alt="logo" />
                   </td>
-                  <td id="3E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3E")} >
+                  <td id="3E" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "3E")()}
                     {this.addPlayer2Detective.bind(this, "3E")()}
                   </td>
                 </tr>
                 <tr>
-                  <td id="4W" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4W")} >
+                  <td id="4W" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "4W")()}
                     {this.addPlayer2Detective.bind(this, "4W")()}
                   </td>
@@ -1107,7 +1286,7 @@ var GamePlay = React.createClass({
                     <img src={this.state.tile4x4} alt="logo" onClick={this.clickTile.bind(this, "4x4")} />
                     <img src={suspectA} className="Suspect-pos" alt="logo" />
                   </td>
-                  <td id="4E" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4E")} >
+                  <td id="4E" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "4E")()}
                     {this.addPlayer2Detective.bind(this, "4E")()}
                   </td>
@@ -1115,19 +1294,19 @@ var GamePlay = React.createClass({
                 <tr>
                   <td className="UnusedCell">
                   </td>
-                  <td id="1S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "1S")} >
+                  <td id="1S" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "1S")()}
                     {this.addPlayer2Detective.bind(this, "1S")()}
                   </td>
-                  <td id="2S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "2S")} >
+                  <td id="2S" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "2S")()}
                     {this.addPlayer2Detective.bind(this, "2S")()}
                   </td>
-                  <td id="3S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "3S")} >
+                  <td id="3S" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "3S")()}
                     {this.addPlayer2Detective.bind(this, "3S")()}
                   </td>
-                  <td id="4S" className="DetectiveCell" onClick={this.clickDetectiveTile.bind(this, "4S")} >
+                  <td id="4S" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "4S")()}
                     {this.addPlayer2Detective.bind(this, "4S")()}
                   </td>
@@ -1149,25 +1328,25 @@ var GamePlay = React.createClass({
               </table>
               <table className="ActionTable">
                 <tr>
-                  <td id="action1" className="ActionCell" onClick={this.clickMoveDetective1.bind(this)}>
+                  <td id="action1" className="ActionCell" onClick={this.clickMoveDetective1}>
                     Move<br/><br/>
                     <img src={this.state.movedDetective1} alt="logo" />
                   </td>
-                  <td id="action2" className="ActionCell" onClick={this.clickMoveDetective2.bind(this)}>
+                  <td id="action2" className="ActionCell" onClick={this.clickMoveDetective2}>
                     Move<br/><br/>
                     <img src={this.state.movedDetective2} alt="logo" />
                   </td>
                 </tr>
                 <tr>
-                  <td id="action3" className="ActionCell" onClick={this.clickSwap.bind(this)}>
+                  <td id="action3" className="ActionCell" onClick={this.clickSwap}>
                     Swap
                   </td>
-                  <td id="action4" className="ActionCell" onClick={this.clickRotate.bind(this)}>
+                  <td id="action4" className="ActionCell" onClick={this.clickRotate}>
                     Rotate
                   </td>
                 </tr>
               </table>
-              <input type="button" value="Apply Action" className="action-button" onClick={this.applyAction.bind(this)} />
+              <input type="button" value="Apply Action" className="action-button" onClick={this.applyAction} />
               <table className="TurnTable">
                 <tr>
                   <td className="TurnCell">
