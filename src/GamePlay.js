@@ -42,15 +42,10 @@ var detectiveMoveMapping = {
 };
 
 var stateMachine = {
-  "selectAction" : "moveTile,rotateTile,moveP1D1,moveP1D2,moveP2D1,moveP2D2",
+  "selectAction" : "swapTile,rotateTile,moveP1D1,moveP1D2,moveP2D1,moveP2D2",
   "rotateTile" : "rotatedTileSelected",
-  "moveTile" : "srcMoveTileSelected,",
-  "srcMoveTileSelected" : "selectAction, randomAction",
-  "randomAction" : "selectAction",
-  "rotateTile" : "srcRotateTileSelected",
-  "srcRotateTileSelected" : "selectAction, randomAction",
-  "moveP1D1" : "P1D1Selected",
-  "P1D1Selected" : "selectAction, randomAction"
+  "swapTile" : "swapTileSrcSelected",
+  "swapTileSrcSelected" : "swapTileDestSelected"
 };
 
 var tileValueMapping = {
@@ -662,6 +657,7 @@ var GamePlay = React.createClass({
 
   clickTile: function(tileId) {
     if (this.state.whoTurn === this.props.playerId) {
+      // Select the tile to be rotated
       if (this.state.playerState === "rotateTile") {
         var tileValue = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId + '/tile');
         var value = 0;
@@ -680,6 +676,7 @@ var GamePlay = React.createClass({
         return;
       }
 
+      // Change the tile to be rotated
       if (this.state.playerState == "rotateTileSelected" && this.state.selectedTile != tileId) {
         // Reset the previous tile state
         var key = "tile" + this.state.selectedTile;
@@ -706,6 +703,7 @@ var GamePlay = React.createClass({
         return;
       }
 
+      // Keep rotate the same tile
       if (this.state.whoTurn === this.props.playerId && this.state.playerState === "rotateTileSelected" && this.state.selectedTile === tileId) {
         var newValue = 0;
         var newValue2 = tileA;
@@ -737,7 +735,44 @@ var GamePlay = React.createClass({
           selectedTileValue: newValue,
           [key]: newValue2
         });
+
+        return;
       }
+      //////////
+
+      // Select the tile to be swapped
+      if (this.state.playerState === "swapTile") {
+        var tileValue = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId + '/tile');
+        var value = 0;
+
+        tileValue.once('value', function(snapshot) {
+          value = snapshot.val();
+        });
+
+        this.setState({
+          playerState: "swapTileSrcSelected",
+          selectedTile: tileId
+        });
+
+        return;
+      }
+
+      if (this.state.playerState === "swapTileSrcSelected" && this.state.selectedTile != tileId) {
+        var tileValue = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId + '/tile');
+        var value = 0;
+
+        tileValue.once('value', function(snapshot) {
+          value = snapshot.val();
+        });
+
+        this.setState({
+          playerState: "swapTileDestSelected",
+          selectedDestTile: tileId
+        });
+
+        return;
+      }
+      //////////
     }
   },
 
@@ -1054,7 +1089,7 @@ var GamePlay = React.createClass({
         selectedAction: 3
       });
 
-      if (this.state.playerState != "swap") {
+      if (this.state.playerState != "swapTile") {
         var cells = document.getElementsByClassName("DetectiveCell");
 
         for (var i=0,len=cells.length; i<len; i++) {
@@ -1062,7 +1097,7 @@ var GamePlay = React.createClass({
         }
 
         this.setState({
-          playerState: "swap"
+          playerState: "swapTile"
         });
       }
     }
@@ -1098,13 +1133,45 @@ var GamePlay = React.createClass({
       else
       {
         // Apply player action
+        // Rotate action
         if (this.state.playerState === "rotateTileSelected") {
-          console.log("Apply tile " + this.state.selectedTile + " " + this.state.selectedTileValue)
-
           var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + this.state.selectedTile);
           tile.update({
             tile: this.state.selectedTileValue
           })
+        }
+
+        // Swap action
+        console.log(this.state.playerState);
+        if (this.state.playerState === "swapTileSrcSelected") {
+          alert("Please select an destination tile to swap.");
+        } else if (this.state.playerState === "swapTileDestSelected") {
+          console.log(this.state.selectedTile);
+          console.log(this.state.selectedDestTile);
+          var srcTile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + this.state.selectedTile);
+          var destTile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + this.state.selectedDestTile);
+          var srcTileValue = 0;
+          var destTileValue = 0;
+
+          srcTile.once('value', function(snapshot) {
+            srcTileValue = snapshot.val();
+          }).then((ref) => {
+
+            destTile.once('value', function(snapshot) {
+              destTileValue = snapshot.val();
+            }).then((ref) => {
+
+              srcTile.update({
+                suspect: destTileValue.suspect,
+                tile: destTileValue.tile
+              });
+
+              destTile.update({
+                suspect: srcTileValue.suspect,
+                tile: srcTileValue.tile
+              });
+            });
+          });
         }
         //////////
 
