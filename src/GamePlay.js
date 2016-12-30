@@ -48,7 +48,9 @@ var stateMachine = {
   "selectAction" : "swapTile,rotateTile,moveP1D1,moveP1D2,moveP2D1,moveP2D2",
   "rotateTile" : "rotatedTileSelected",
   "swapTile" : "swapTileSrcSelected",
-  "swapTileSrcSelected" : "swapTileDestSelected"
+  "swapTileSrcSelected" : "swapTileDestSelected",
+  "movedDetective1" : "detectiveSelected",
+  "movedDetective2" : "detectiveSelected",
 };
 
 var tileValueMapping = {
@@ -822,13 +824,22 @@ var GamePlay = React.createClass({
 
   clickDetective: function(id) {
     if (this.state.whoTurn === this.props.playerId) {
-      if ( (this.state.playerState === "movedDetective1" &&
-        ((this.state.movedDetective1 === detectiveA && this.state.player1Detective1 === id) ||
-        (this.state.movedDetective1 === detectiveB && this.state.player1Detective2 === id))) ||
-        (this.state.playerState === "movedDetective2" &&
-        ((this.state.movedDetective2 === detectiveC && this.state.player2Detective1 === id) ||
-        (this.state.movedDetective2 === detectiveD && this.state.player2Detective2 === id))) ) {
+      var p1 = this.state.playerState === "movedDetective1";
+      var p2 = this.state.playerState === "movedDetective2";
 
+      if (!p1 && !p2) {
+        return;
+      }
+
+      var d1 = (p1) ? (this.state.movedDetective1 === detectiveA && this.state.player1Detective1 === id) :
+               (this.state.movedDetective2 === detectiveC && this.state.player2Detective1 === id);
+      var d2 = (p1) ? (this.state.movedDetective1 === detectiveB && this.state.player1Detective2 === id) :
+               (this.state.movedDetective2 === detectiveD && this.state.player2Detective2 === id);
+      var possibleLoc = [];
+
+      if ( (p1 && (d1 || d2)) || (p2 && (d1 || d2)) ) {
+        var player = (p1) ? "player1" : "player2";
+        var detective = (d1) ? "detective1" : "detective2";
         var cells = document.getElementsByClassName("DetectiveCell");
 
         for (var i=0,len=cells.length; i<len; i++) {
@@ -847,20 +858,48 @@ var GamePlay = React.createClass({
 
             var activeCell = document.getElementById(loc[i]);
             activeCell.style.backgroundColor = "lightgrey";
+
+            possibleLoc.push(loc[i]);
+          }
+        }
+
+        this.setState({
+          selectedPlayer: player,
+          selectedDetective: detective,
+          playerState: "detectiveSelected",
+          possibleLocList: possibleLoc
+        });
+      }
+    }
+  },
+
+  clickDetectiveCell: function(id) {
+    if (this.state.whoTurn === this.props.playerId) {
+      if (this.state.playerState === "detectiveSelected" || this.state.playerState === "detectiveDestSelected") {
+        var possibleLoc = this.state.possibleLocList;
+
+        // Reset background color - required if client select the destination multiple times
+        for (var i=0,len=possibleLoc.length; i<len; i++) {
+          var activeCell = document.getElementById(possibleLoc[i]);
+          activeCell.style.backgroundColor = "lightgrey";
+        }
+
+        // Set background color for selected cell
+        for (var i=0,len=possibleLoc.length; i<len; i++) {
+          if (possibleLoc[i] === id) {
+            var activeCell = document.getElementById(possibleLoc[i]);
+            activeCell.style.backgroundColor = "slategrey";
+
+            this.setState({
+              selectedDestDetectiveLoc: id,
+              playerState: "detectiveDestSelected"
+            });
+
+            return;
           }
         }
       }
     }
-    
-
-    // var cells = document.getElementById('GameBoard').getElementsByTagName('td');
-
-    // for (var i=0,len=cells.length; i<len; i++){
-    //   cells[i].onclick = function(){
-    //     console.log("Test");
-    //     this.style.backgroundColor = "none";
-    //   }
-    // }
   },
 
   generateGameInfo: function() {
@@ -1198,12 +1237,9 @@ var GamePlay = React.createClass({
         }
 
         // Swap action
-        console.log(this.state.playerState);
         if (this.state.playerState === "swapTileSrcSelected") {
           alert("Please select an destination tile to swap.");
         } else if (this.state.playerState === "swapTileDestSelected") {
-          console.log(this.state.selectedTile);
-          console.log(this.state.selectedDestTile);
           var srcTile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + this.state.selectedTile);
           var destTile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + this.state.selectedDestTile);
           var srcTileValue = 0;
@@ -1227,6 +1263,21 @@ var GamePlay = React.createClass({
                 tile: srcTileValue.tile
               });
             });
+          });
+        }
+
+        // Move detective action
+        if (this.state.playerState === "detectiveSelected") {
+          alert("Please select the destination tile to move the detective.");
+        } else if (this.state.playerState === "detectiveDestSelected") {
+          var cells = document.getElementsByClassName("DetectiveCell");
+          for (var i=0,len=cells.length; i<len; i++) {
+            cells[i].style.backgroundColor = "";
+          }
+
+          var playerRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.state.selectedPlayer);
+          playerRef.update({
+            [this.state.selectedDetective]: this.state.selectedDestDetectiveLoc
           });
         }
         //////////
@@ -1292,19 +1343,19 @@ var GamePlay = React.createClass({
                 <tr>
                   <td className="UnusedCell">
                   </td>
-                  <td id="1N" className="DetectiveCell" >
+                  <td id="1N" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "1N")} >
                     {this.addPlayer1Detective.bind(this, "1N")()}
                     {this.addPlayer2Detective.bind(this, "1N")()}
                   </td>
-                  <td id="2N" className="DetectiveCell" >
+                  <td id="2N" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "2N")} >
                     {this.addPlayer1Detective.bind(this, "2N")()}
                     {this.addPlayer2Detective.bind(this, "2N")()}
                   </td>
-                  <td id="3N" className="DetectiveCell" >
+                  <td id="3N" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "3N")} >
                     {this.addPlayer1Detective.bind(this, "3N")()}
                     {this.addPlayer2Detective.bind(this, "3N")()}
                   </td>
-                  <td id="4N" className="DetectiveCell" >
+                  <td id="4N" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "4N")} >
                     {this.addPlayer1Detective.bind(this, "4N")()}
                     {this.addPlayer2Detective.bind(this, "4N")()}
                   </td>
@@ -1312,7 +1363,7 @@ var GamePlay = React.createClass({
                   </td>
                 </tr>
                 <tr>
-                  <td id="1W" className="DetectiveCell" >
+                  <td id="1W" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "1W")} >
                     {this.addPlayer1Detective.bind(this, "1W")()}
                     {this.addPlayer2Detective.bind(this, "1W")()}
                   </td>
@@ -1332,13 +1383,13 @@ var GamePlay = React.createClass({
                     <img src={this.state.tile1x4} alt="logo" onClick={this.clickTile.bind(this, "1x4")} />
                     {this.resolveSuspectImg.bind(this, "1x4")()}
                   </td>
-                  <td id="1E" className="DetectiveCell" >
+                  <td id="1E" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "1E")} >
                     {this.addPlayer1Detective.bind(this, "1E")()}
                     {this.addPlayer2Detective.bind(this, "1E")()}
                   </td>
                 </tr>
                 <tr>
-                  <td id="2W" className="DetectiveCell" >
+                  <td id="2W" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "2W")} >
                     {this.addPlayer1Detective.bind(this, "2W")()}
                     {this.addPlayer2Detective.bind(this, "2W")()}
                   </td>
@@ -1358,13 +1409,13 @@ var GamePlay = React.createClass({
                     <img src={this.state.tile2x4} alt="logo" onClick={this.clickTile.bind(this, "2x4")} />
                     {this.resolveSuspectImg.bind(this, "2x4")()}
                   </td>
-                  <td id="2E" className="DetectiveCell" >
+                  <td id="2E" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "2E")} >
                     {this.addPlayer1Detective.bind(this, "2E")()}
                     {this.addPlayer2Detective.bind(this, "2E")()}
                   </td>
                 </tr>
                 <tr>
-                  <td id="3W" className="DetectiveCell" >
+                  <td id="3W" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "3W")} >
                     {this.addPlayer1Detective.bind(this, "3W")()}
                     {this.addPlayer2Detective.bind(this, "3W")()}
                   </td>
@@ -1384,13 +1435,13 @@ var GamePlay = React.createClass({
                     <img src={this.state.tile3x4} alt="logo" onClick={this.clickTile.bind(this, "3x4")} />
                     {this.resolveSuspectImg.bind(this, "3x4")()}
                   </td>
-                  <td id="3E" className="DetectiveCell" >
+                  <td id="3E" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "3E")} >
                     {this.addPlayer1Detective.bind(this, "3E")()}
                     {this.addPlayer2Detective.bind(this, "3E")()}
                   </td>
                 </tr>
                 <tr>
-                  <td id="4W" className="DetectiveCell" >
+                  <td id="4W" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "4W")} >
                     {this.addPlayer1Detective.bind(this, "4W")()}
                     {this.addPlayer2Detective.bind(this, "4W")()}
                   </td>
@@ -1410,7 +1461,7 @@ var GamePlay = React.createClass({
                     <img src={this.state.tile4x4} alt="logo" onClick={this.clickTile.bind(this, "4x4")} />
                     {this.resolveSuspectImg.bind(this, "4x4")()}
                   </td>
-                  <td id="4E" className="DetectiveCell" >
+                  <td id="4E" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "4E")} >
                     {this.addPlayer1Detective.bind(this, "4E")()}
                     {this.addPlayer2Detective.bind(this, "4E")()}
                   </td>
@@ -1418,19 +1469,19 @@ var GamePlay = React.createClass({
                 <tr>
                   <td className="UnusedCell">
                   </td>
-                  <td id="1S" className="DetectiveCell" >
+                  <td id="1S" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "1S")} >
                     {this.addPlayer1Detective.bind(this, "1S")()}
                     {this.addPlayer2Detective.bind(this, "1S")()}
                   </td>
-                  <td id="2S" className="DetectiveCell" >
+                  <td id="2S" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "2S")} >
                     {this.addPlayer1Detective.bind(this, "2S")()}
                     {this.addPlayer2Detective.bind(this, "2S")()}
                   </td>
-                  <td id="3S" className="DetectiveCell" >
+                  <td id="3S" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "3S")} >
                     {this.addPlayer1Detective.bind(this, "3S")()}
                     {this.addPlayer2Detective.bind(this, "3S")()}
                   </td>
-                  <td id="4S" className="DetectiveCell" >
+                  <td id="4S" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "4S")} >
                     {this.addPlayer1Detective.bind(this, "4S")()}
                     {this.addPlayer2Detective.bind(this, "4S")()}
                   </td>
