@@ -55,6 +55,10 @@ var tileValueMapping = {
   "tileD" : tileD
 };
 
+var criminal = "";
+
+var tileGuid = {"tileA":{"E":{"next":true,"see":true},"N":{"next":false,"see":true},"S":{"next":false,"see":false},"W":{"next":true,"see":true}},"tileB":{"E":{"next":false,"see":true},"N":{"next":true,"see":true},"S":{"next":true,"see":true},"W":{"next":false,"see":false}},"tileC":{"E":{"next":true,"see":true},"N":{"next":false,"see":false},"S":{"next":false,"see":true},"W":{"next":true,"see":true}},"tileD":{"E":{"next":false,"see":false},"N":{"next":true,"see":true},"S":{"next":true,"see":true},"W":{"next":false,"see":true}}};
+
 var GamePlay = React.createClass({
 
   getInitialState: function() {
@@ -867,10 +871,11 @@ var GamePlay = React.createClass({
       player2SuspectsRef.update({[shuffledSuspect]: ""});
     }
 
+    criminal = shuffledSuspects[Math.floor(Math.random() * 16)];
     var gamesRef = firebase.database().ref('games/'+ this.props.gameId);
     gamesRef.update({
       boardSize: 4,
-      criminal: shuffledSuspects[Math.floor(Math.random() * 16)],
+      criminal: criminal,
       numPlayer: 2,
       whoTurn: "player1",
       round: 1
@@ -897,99 +902,102 @@ var GamePlay = React.createClass({
       return ("");
   },
   
-  resolveDetective: function() {
-    var listInTheLight = [];
-    //var detective1 = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.player + '/detective1').val();
-    //var detective2 = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.player + '/detective2').val();
-    var detective1 = '3N';
-    var detective2 = '4W';
-
-    listInTheLight.concat(this.resolvePerDetective(detective1));
-    listInTheLight.concat(this.resolvePerDetective(detective2));
-    // check dark or bright space
-    //var criminal = firebase.database().ref('games/'+ this.props.gameId + '/criminal').val();;
-    var criminal = '007';
-    var IsCriminalInBright = (listInTheLight.indexOf(criminal) >= 0);
-
-    //var suspectsRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.player + '/suspects');
-    var suspects = ["005", "004", "007", "003", "015", "020", "019", "016", "011", "014", "001", "010", "009", "006", "002", "012"];
-    for (var suspect in suspects) {
-      if (IsCriminalInBright) {
-        if (listInTheLight.indexOf(suspect) < 0) {
-          //var suspectRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.player + '/suspects/' + suspect).remove();
-        }
-      } else {
-        if (listInTheLight.indexOf(suspect) >= 0) {
-          //var suspectRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.player + '/suspects/' + suspect).remove();
-        }
+  sleep: function(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+      if ((new Date().getTime() - start) > milliseconds){
+        break;
       }
     }
   },
   
-  resolvePerDetective: function(detective) {
+  resolveDetective: function() {
     var listInTheLight = [];
-    var position = detective.charAt(0);
-    var direction = detective.charAt(1);
-
-    switch (direction) {
-    case "N":
-      for (var i = 1; i <= 4; i++) {
-        //var suspect = firebase.database().ref('games/'+ this.props.gameId + '/board/' + i + 'x' + position + '/suspect').val();
-        //var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + i + 'x' + position + '/tile').val();
-        var suspect = i + 'x' + position;
-        var tile = 'tileA';
-        //var see = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/see').val();
-        //var next = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/next').val();
-        var see = true;
-        var next = true;
-        if (see) { listInTheLight.push(suspect); }
-        if (!next) { break; }
+    firebase.database().ref('games/'+ this.props.gameId).on('value', function(snapshot) {
+      var detectives = [snapshot.child('players').child(this.props.playerId).child('detective1').val(),snapshot.child('players').child(this.props.playerId).child('detective2').val()];
+        
+      for (var dIndex = 0; dIndex < 2; dIndex++) {
+        var position = detectives[dIndex].charAt(0);
+        var direction = detectives[dIndex].charAt(1);
+        
+        switch (direction) {
+        case "N":
+            for (var i = 1; i <= 4; i++) {
+            var tile = snapshot.child('board').child(i + 'x' + position).child('tile').val();
+            
+            if (tileGuid[tile][direction]["see"]) { listInTheLight.push(snapshot.child('board').child(i + 'x' + position).child('suspect').val()); }
+            if (!tileGuid[tile][direction]["next"]) { break; }
+            }
+            break;
+        
+        case "E":
+            for (var i = 4; i >= 1; i--) {
+            var tile = snapshot.child('board').child(position + 'x' + i).child('tile').val();
+            
+            if (tileGuid[tile][direction]["see"]) { listInTheLight.push(snapshot.child('board').child(position + 'x' + i).child('suspect').val()); }
+            if (!tileGuid[tile][direction]["next"]) { break; }
+            }
+            break;
+        
+        case "S":
+            for (var i = 4; i >= 1; i--) {
+            var tile = snapshot.child('board').child(i + 'x' + position).child('tile').val();
+            
+            if (tileGuid[tile][direction]["see"]) { listInTheLight.push(snapshot.child('board').child(i + 'x' + position).child('suspect').val()); }
+            if (!tileGuid[tile][direction]["next"]) { break; }
+            }
+            break;
+        
+        case "W":
+            for (var i = 1; i <= 4; i++) {
+            var tile = snapshot.child('board').child(position + 'x' + i).child('tile').val();
+            
+            if (tileGuid[tile][direction]["see"]) { listInTheLight.push(snapshot.child('board').child(position + 'x' + i).child('suspect').val()); }
+            if (!tileGuid[tile][direction]["next"]) { break; }
+            }
+            break;
+        };
       }
-      break;
-    case "E":
-      for (i = 4; i >= 1; i--) {
-        //var suspect = firebase.database().ref('games/'+ this.props.gameId + '/board/' + position + 'x' + i + '/suspect').val();
-        //var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + position + 'x' + i + '/tile').val();
-        var suspect = position + 'x' + i;
-        var tile = 'tileB';
-        //var see = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/see').val();
-        //var next = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/next').val();
-        var see = true;
-        var next = true;
-        if (see) { listInTheLight.push(suspect); }
-        if (!next) { break; }
+    }.bind(this));
+    
+    this.sleep(1000);
+    console.log (listInTheLight);
+    
+    // check dark or bright space
+    var IsCriminalInBright = (listInTheLight.indexOf(criminal) >= 0);
+          
+    console.log (criminal);
+    console.log (IsCriminalInBright);   
+    
+    var suspects = ['001', '002', '003', '004', '005', '006', '007', '008', '009', '010', 
+                    '011', '012', '013', '014', '015', '016'];
+    
+    for (var index in suspects) {
+      var suspect = suspects[index];
+      if (IsCriminalInBright) {
+        if (listInTheLight.indexOf(suspect) < 0) {
+          console.log (suspect);
+          var suspectRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.playerId + '/suspects/' + suspect);
+          suspectRef.remove().then(function() {
+            console.log("Remove succeeded.")
+          })
+          .catch(function(error) {
+            console.log("Remove failed: " + error.message)
+          });
+        }
+      } else {
+        if (listInTheLight.indexOf(suspect) >= 0) {
+          console.log (suspect);
+          var suspectRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.playerId + '/suspects/' + suspect);
+          suspectRef.remove().then(function() {
+            console.log("Remove succeeded.")
+          })
+          .catch(function(error) {
+            console.log("Remove failed: " + error.message)
+          });
+        }
       }
-      break;
-    case "S":
-      for (i = 4; i >= 1; i--) {
-        //var suspect = firebase.database().ref('games/'+ this.props.gameId + '/board/' + i + 'x' + position + '/suspect').val();
-        //var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + i + 'x' + position + '/tile').val();
-        var suspect = i + 'x' + position;
-        var tile = 'tileC';
-        //var see = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/see').val();
-        //var next = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/next').val();
-        var see = true;
-        var next = true;
-        if (see) { listInTheLight.push(suspect); }
-        if (!next) { break; }
-      }
-      break;
-    case "W":
-      for (i = 1; i <= 4; i++) {
-        //var suspect = firebase.database().ref('games/'+ this.props.gameId + '/board/' + position + 'x' + i + '/suspect').val();
-        //var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + position + 'x' + i + '/tile').val();
-        var suspect = position + 'x' + i;
-        var tile = 'tileD';
-        //var see = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/see').val();
-        //var next = firebase.database().ref('tiles/'+ tile + '/' + direction + '/' + '/next').val();
-        var see = true;
-        var next = true;
-        if (see) { listInTheLight.push(suspect); }
-        if (!next) { break; }
-      }
-      break;
     }
-    return listInTheLight;
   },
 
   clickMoveDetective1: function(){
@@ -1431,6 +1439,8 @@ var GamePlay = React.createClass({
             </td>
           </tr>
         </table>
+        
+        <input type="button" onClick={this.resolveDetective} value="Test Resolve Detective" />
       </div>
     );
   }
