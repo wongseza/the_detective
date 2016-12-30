@@ -41,6 +41,9 @@ var detectiveMoveMapping = {
   "4W" : "3W,2W,1S,2S"
 };
 
+var suspectImgMap = new Object();
+var tileSuspectMap = new Object();
+
 var stateMachine = {
   "selectAction" : "swapTile,rotateTile,moveP1D1,moveP1D2,moveP2D1,moveP2D2",
   "rotateTile" : "rotatedTileSelected",
@@ -111,7 +114,44 @@ var GamePlay = React.createClass({
     });
   },
 
+  initSuspectImgStaticMap: function() {
+    console.log("initSuspectImgStaticMap");
+    var suspectList = []
+    var ids = []
+    firebase.database().ref('suspects').once('value').then(function(snapshot) {
+      ids = Object.keys(snapshot.val());
+      // console.log(ids);
+      suspectList = snapshot.val();
+      for(var i = 0; i<ids.length; i++) {
+        var id = ids[i];
+        suspectImgMap[id] = suspectList[id].picture;
+      }
+      console.log("suspectImgMap >> " +  suspectImgMap);
+    // }).then((ref) => {
+    //   this.render();
+    });
+  },
+
+  initTileSuspectMap: function() {
+    console.log("initTileSuspectMap");
+    firebase.database().ref('games/'+ this.props.gameId + '/board').once('value').then(function(snapshot) {
+      var ids = Object.keys(snapshot.val());
+      // console.log(ids);
+      var tileList = snapshot.val();
+      for(var i = 0; i<ids.length; i++) {
+        var id = ids[i];
+        tileSuspectMap[id] = tileList[id].suspect;
+      } // end for
+      console.log("tileSuspectMap >> " +  tileSuspectMap);
+    // }).then((ref) => {
+    //   this.render();
+    });
+  },
+
   componentWillMount: function() {
+    this.initTileSuspectMap();
+    this.initSuspectImgStaticMap();
+
     // Tile setting
     var tile1x1 = firebase.database().ref('games/'+ this.props.gameId + '/board/1x1/tile');
     var tile1x2 = firebase.database().ref('games/'+ this.props.gameId + '/board/1x2/tile');
@@ -907,10 +947,18 @@ var GamePlay = React.createClass({
     for (var i = 0; i < 1e7; i++) {
       if ((new Date().getTime() - start) > milliseconds){
         break;
+        }
       }
-    }
   },
   
+  resolveSuspectImg: function(tileLoc) {
+    console.log("Resolve Suspect Img, tile " + tileLoc);
+    var susID = tileSuspectMap[tileLoc];
+    console.log("Resolve Suspect Img " + susID + " " + suspectImgMap[susID]);
+    return (<img src={suspectImgMap[susID]} className="Suspect-pos" alt="logo" />);
+    // return suspectImgMap[susID];
+  },
+
   resolveDetective: function() {
     var listInTheLight = [];
     firebase.database().ref('games/'+ this.props.gameId).on('value', function(snapshot) {
@@ -1234,6 +1282,7 @@ var GamePlay = React.createClass({
   },
 
   render: function() {
+    console.log("=================== Render ===========================")
     return (
       <div className="Board">
         <table>
@@ -1269,19 +1318,19 @@ var GamePlay = React.createClass({
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile1x1} alt="logo" onClick={this.clickTile.bind(this, "1x1")}/>
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "1x1")()}
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile1x2} alt="logo" onClick={this.clickTile.bind(this, "1x2")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "1x2")()}
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile1x3} alt="logo" onClick={this.clickTile.bind(this, "1x3")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "1x3")()} 
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile1x4} alt="logo" onClick={this.clickTile.bind(this, "1x4")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "1x4")()}
                   </td>
                   <td id="1E" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "1E")()}
@@ -1295,19 +1344,19 @@ var GamePlay = React.createClass({
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile2x1} alt="logo" onClick={this.clickTile.bind(this, "2x1")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "2x1")()}
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile2x2} alt="logo" onClick={this.clickTile.bind(this, "2x2")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "2x2")()}
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile2x3} alt="logo" onClick={this.clickTile.bind(this, "2x3")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "2x3")()}
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile2x4} alt="logo" onClick={this.clickTile.bind(this, "2x4")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "2x4")()}
                   </td>
                   <td id="2E" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "2E")()}
@@ -1321,19 +1370,19 @@ var GamePlay = React.createClass({
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile3x1} alt="logo" onClick={this.clickTile.bind(this, "3x1")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "3x1")()}
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile3x2} alt="logo" onClick={this.clickTile.bind(this, "3x2")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "3x2")()}
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile3x3} alt="logo" onClick={this.clickTile.bind(this, "3x3")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "3x3")()}
                   </td>
                   <td id="3x4" className="TileCell">
                     <img src={this.state.tile3x4} alt="logo" onClick={this.clickTile.bind(this, "3x4")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "3x4")()}
                   </td>
                   <td id="3E" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "3E")()}
@@ -1347,19 +1396,19 @@ var GamePlay = React.createClass({
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile4x1} alt="logo" onClick={this.clickTile.bind(this, "4x1")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "4x1")()}
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile4x2} alt="logo" onClick={this.clickTile.bind(this, "4x2")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "4x2")()}
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile4x3} alt="logo" onClick={this.clickTile.bind(this, "4x3")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "4x3")()}
                   </td>
                   <td className="TileCell">
                     <img src={this.state.tile4x4} alt="logo" onClick={this.clickTile.bind(this, "4x4")} />
-                    <img src={suspectA} className="Suspect-pos" alt="logo" />
+                    {this.resolveSuspectImg.bind(this, "4x4")()}
                   </td>
                   <td id="4E" className="DetectiveCell" >
                     {this.addPlayer1Detective.bind(this, "4E")()}
