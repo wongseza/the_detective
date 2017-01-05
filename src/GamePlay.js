@@ -171,6 +171,22 @@ var GamePlay = React.createClass({
     var tile4x2 = firebase.database().ref('games/'+ this.props.gameId + '/board/4x2/tile');
     var tile4x3 = firebase.database().ref('games/'+ this.props.gameId + '/board/4x3/tile');
     var tile4x4 = firebase.database().ref('games/'+ this.props.gameId + '/board/4x4/tile');
+    var suspect1x1 = firebase.database().ref('games/'+ this.props.gameId + '/board/1x1/suspect');
+    var suspect1x2 = firebase.database().ref('games/'+ this.props.gameId + '/board/1x2/suspect');
+    var suspect1x3 = firebase.database().ref('games/'+ this.props.gameId + '/board/1x3/suspect');
+    var suspect1x4 = firebase.database().ref('games/'+ this.props.gameId + '/board/1x4/suspect');
+    var suspect2x1 = firebase.database().ref('games/'+ this.props.gameId + '/board/2x1/suspect');
+    var suspect2x2 = firebase.database().ref('games/'+ this.props.gameId + '/board/2x2/suspect');
+    var suspect2x3 = firebase.database().ref('games/'+ this.props.gameId + '/board/2x3/suspect');
+    var suspect2x4 = firebase.database().ref('games/'+ this.props.gameId + '/board/2x4/suspect');
+    var suspect3x1 = firebase.database().ref('games/'+ this.props.gameId + '/board/3x1/suspect');
+    var suspect3x2 = firebase.database().ref('games/'+ this.props.gameId + '/board/3x2/suspect');
+    var suspect3x3 = firebase.database().ref('games/'+ this.props.gameId + '/board/3x3/suspect');
+    var suspect3x4 = firebase.database().ref('games/'+ this.props.gameId + '/board/3x4/suspect');
+    var suspect4x1 = firebase.database().ref('games/'+ this.props.gameId + '/board/4x1/suspect');
+    var suspect4x2 = firebase.database().ref('games/'+ this.props.gameId + '/board/4x2/suspect');
+    var suspect4x3 = firebase.database().ref('games/'+ this.props.gameId + '/board/4x3/suspect');
+    var suspect4x4 = firebase.database().ref('games/'+ this.props.gameId + '/board/4x4/suspect');
     var game = firebase.database().ref('games/'+ this.props.gameId);
     var whoTurn = firebase.database().ref('games/'+ this.props.gameId + '/whoTurn');
     var movedDetective1 = firebase.database().ref('games/'+ this.props.gameId + '/movedDetective1');
@@ -185,8 +201,8 @@ var GamePlay = React.createClass({
     if (this.props.playerId === "player1")
     {
       this.generateGameInfo();
+      this.resetAction();
     }
-    this.resetAction();
 
     round.on('value', function(snapshot) {
       value = snapshot.val();
@@ -196,44 +212,56 @@ var GamePlay = React.createClass({
       if (this.props.playerId === "player1")
       {
         this.randomMovedDetective();
+        this.resetAction();
       }
-      this.resetAction();
     }.bind(this))
 
     isAction1Avaliable.on('value', function(snapshot) {
       value = snapshot.val();
       this.setState({
         isAction1Avaliable: value
+      }, function() {
+        if (!value)
+          document.getElementById("action1").style.backgroundColor = "dimgray";
+        else
+          document.getElementById("action1").style.backgroundColor = "";
       });
-      if (!value)
-        document.getElementById("action1").style.backgroundColor = "dimgray";
     }.bind(this))
 
     isAction2Avaliable.on('value', function(snapshot) {
       value = snapshot.val();
       this.setState({
         isAction2Avaliable: value
+      }, function() {
+        if (!value)
+          document.getElementById("action2").style.backgroundColor = "dimgray";
+        else
+          document.getElementById("action2").style.backgroundColor = "";
       });
-      if (!value)
-        document.getElementById("action2").style.backgroundColor = "dimgray";
     }.bind(this))
 
     isAction3Avaliable.on('value', function(snapshot) {
       value = snapshot.val();
       this.setState({
         isAction3Avaliable: value
+      }, function() {
+        if (!value)
+          document.getElementById("action3").style.backgroundColor = "dimgray";
+        else
+          document.getElementById("action3").style.backgroundColor = "";
       });
-      if (!value)
-        document.getElementById("action3").style.backgroundColor = "dimgray";
     }.bind(this))
 
     isAction4Avaliable.on('value', function(snapshot) {
       value = snapshot.val();
       this.setState({
         isAction4Avaliable: value
+      }, function() {
+        if (!value)
+          document.getElementById("action4").style.backgroundColor = "dimgray";
+        else
+          document.getElementById("action4").style.backgroundColor = "";
       });
-      if (!value)
-        document.getElementById("action4").style.backgroundColor = "dimgray";
     }.bind(this))
 
     whoTurn.on('value', function(snapshot) {
@@ -265,51 +293,234 @@ var GamePlay = React.createClass({
 
     selectedAction.on('value', function(snapshot) {
       value = snapshot.val();
-      this.setState({
-        selectedAction: value
-      });
+      if (value !== 0) {
+        this.setState({
+          selectedAction: value
+        }, function(){
+          switch(value)
+          {
+            case 1:
+              this.setState({
+                message: "Move Detective 1 is selected."
+              });
+              break;
+            case 2:
+              this.setState({
+                message: "Move Detective 2 is selected."
+              });
+              break;
+            case 3:
+              this.setState({
+                message: "Swap is selected."
+              });
+              break;
+            case 4:
+              this.setState({
+                message: "Rotate is selected."
+              });
+              break;
+          }
 
-      switch(value)
-      {
-        case 1:
-          this.setState({
-            message: "Move Detective 1 is selected."
-          });
-          break;
-        case 2:
-          this.setState({
-            message: "Move Detective 2 is selected."
-          });
-          break;
-        case 3:
-          this.setState({
-            message: "Swap is selected."
-          });
-          break;
-        case 4:
-          this.setState({
-            message: "Rotate is selected."
-          });
-          break;
+          isAction1Avaliable.once('value', function(snapshot) {
+            var isAvailable = snapshot.val();
+            if (!isAvailable) {
+              document.getElementById("action1").style.backgroundColor = "dimgray";
+            }
+            else if (value === 1) {
+              document.getElementById("action1").style.backgroundColor = "lightpink";
+            }
+            else {
+              document.getElementById("action1").style.backgroundColor = "";
+            }
+          }.bind(this))
+
+          isAction2Avaliable.once('value', function(snapshot) {
+            var isAvailable = snapshot.val();
+            if (!isAvailable) {
+              document.getElementById("action2").style.backgroundColor = "dimgray";
+            }
+            else if (value === 2) {
+              document.getElementById("action2").style.backgroundColor = "lightpink";
+            }
+            else {
+              document.getElementById("action2").style.backgroundColor = "";
+            }
+          }.bind(this))
+
+          isAction3Avaliable.once('value', function(snapshot) {
+            var isAvailable = snapshot.val();
+            if (!isAvailable) {
+              document.getElementById("action3").style.backgroundColor = "dimgray";
+            }
+            else if (value === 3) {
+              document.getElementById("action3").style.backgroundColor = "lightpink";
+            }
+            else {
+              document.getElementById("action3").style.backgroundColor = "";
+            }
+          }.bind(this))
+
+          isAction4Avaliable.once('value', function(snapshot) {
+            var isAvailable = snapshot.val();
+            if (!isAvailable) {
+              document.getElementById("action4").style.backgroundColor = "dimgray";
+            }
+            else if (value === 4) {
+              document.getElementById("action4").style.backgroundColor = "lightpink";
+            }
+            else {
+              document.getElementById("action4").style.backgroundColor = "";
+            }
+          }.bind(this))
+        });
       }
-
-      for (var i = 0; i < 4; i++)
-      {
-        document.getElementById("action" + (i + 1).toString()).style.backgroundColor = (i + 1 === value) ? "lightpink" : "white";
-      }
-
-      if (!this.state.isAction1Avaliable)
-        document.getElementById("action1").style.backgroundColor = "dimgray";
-      if (!this.state.isAction2Avaliable)
-        document.getElementById("action2").style.backgroundColor = "dimgray";
-      if (!this.state.isAction3Avaliable)
-        document.getElementById("action3").style.backgroundColor = "dimgray";
-      if (!this.state.isAction4Avaliable)
-        document.getElementById("action4").style.backgroundColor = "dimgray";
-
     }.bind(this))
 
     var value = 0;
+
+    suspect1x1.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect1x1: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("1x1").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect1x2.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect1x2: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("1x2").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect1x3.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect1x3: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("1x3").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect1x4.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect1x4: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("1x4").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect2x1.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect2x1: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("2x1").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect2x2.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect2x2: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("2x2").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect2x3.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect2x3: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("2x3").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect2x4.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect2x4: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("2x4").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect3x1.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect3x1: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("3x1").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect3x2.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect3x2: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("3x2").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect3x3.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect3x3: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("3x3").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect3x4.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect3x4: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("3x4").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect4x1.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect4x1: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("4x1").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect4x2.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect4x2: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("4x2").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect4x3.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect4x3: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("4x3").style.backgroundColor = "";
+      });
+    }.bind(this))
+
+    suspect4x4.on('value', function(snapshot){
+      value = snapshot.val();
+      this.setState({
+        suspect4x4: "Dog" + value + ".png"
+      }, function(){
+        document.getElementById("4x4").style.backgroundColor = "";
+      });
+    }.bind(this))
 
     tile1x1.on('value', function(snapshot) {
       value = snapshot.val();
@@ -330,7 +541,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile1x1"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("1x1").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile1x2.on('value', function(snapshot) {
@@ -352,7 +565,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile1x2"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("1x2").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile1x3.on('value', function(snapshot) {
@@ -374,7 +589,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile1x3"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("1x3").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile1x4.on('value', function(snapshot) {
@@ -396,7 +613,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile1x4"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("1x4").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile2x1.on('value', function(snapshot) {
@@ -418,7 +637,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile2x1"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("2x1").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile2x2.on('value', function(snapshot) {
@@ -440,7 +661,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile2x2"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("2x2").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile2x3.on('value', function(snapshot) {
@@ -462,7 +685,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile2x3"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("2x3").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile2x4.on('value', function(snapshot) {
@@ -484,7 +709,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile2x4"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("2x4").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile3x1.on('value', function(snapshot) {
@@ -506,7 +733,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile3x1"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("3x1").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile3x2.on('value', function(snapshot) {
@@ -528,7 +757,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile3x2"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("3x2").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile3x3.on('value', function(snapshot) {
@@ -550,7 +781,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile3x3"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("3x3").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile3x4.on('value', function(snapshot) {
@@ -572,7 +805,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile3x4"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("3x4").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile4x1.on('value', function(snapshot) {
@@ -594,7 +829,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile4x1"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("4x1").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile4x2.on('value', function(snapshot) {
@@ -616,7 +853,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile4x2"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("4x2").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile4x3.on('value', function(snapshot) {
@@ -638,7 +877,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile4x3"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("4x3").style.backgroundColor = "";
+      });
     }.bind(this))
 
     tile4x4.on('value', function(snapshot) {
@@ -660,7 +901,9 @@ var GamePlay = React.createClass({
         default:
           newState["tile4x4"] = tileA;
       }
-      this.setState(newState);
+      this.setState(newState, function(){
+        document.getElementById("4x4").style.backgroundColor = "";
+      });
     }.bind(this))
 
     var player1Detective1 = firebase.database().ref('games/'+ this.props.gameId + '/players/player1/detective1');
@@ -701,6 +944,36 @@ var GamePlay = React.createClass({
   componentWillUnmount: function() {
   },
 
+  resetCellColor: function(){
+    var cells = document.getElementsByClassName("DetectiveCell");
+    for (var i = 0, len = cells.length; i < len; i++) {
+      cells[i].style.backgroundColor = "";
+    }
+
+    cells = document.getElementsByClassName("TileCell");
+    for (var i = 0, len = cells.length; i < len; i++) {
+      cells[i].style.backgroundColor = "";
+    }
+  },
+
+  resetSelectedTiles: function(){
+    if (this.state.whoTurn === this.props.playerId)
+    {
+      if (this.state.playerState === "rotateTileSelected") 
+      {
+        this.setState({
+          playerState: "rotateTile"
+        }, this.resetCellColor());
+      }
+      else if (this.state.playerState === "swapTileSrcSelected" || this.state.playerState === "swapTileDestSelected")
+      {
+        this.setState({
+          playerState: "swapTile"
+        }, this.resetCellColor());
+      }
+    }
+  },
+
   clickTile: function(tileId) {
     if (this.state.whoTurn === this.props.playerId) {
       // Select the tile to be rotated
@@ -718,6 +991,9 @@ var GamePlay = React.createClass({
           selectedTileValue: value,
           selectedTileCurValue: tileValueMapping[value]
         });
+
+        var activeCell = document.getElementById(tileId);
+        activeCell.style.backgroundColor = "slategrey";
 
         return;
       }
@@ -745,6 +1021,14 @@ var GamePlay = React.createClass({
           selectedTileValue: value,
           selectedTileCurValue: tileValueMapping[value]
         });
+
+        var cells = document.getElementsByClassName("TileCell");
+        for (var i = 0, len = cells.length; i < len; i++) {
+          cells[i].style.backgroundColor = "";
+        }
+
+        var activeCell = document.getElementById(tileId);
+        activeCell.style.backgroundColor = "slategrey";
 
         return;
       }
@@ -800,6 +1084,9 @@ var GamePlay = React.createClass({
           selectedTile: tileId
         });
 
+        var activeCell = document.getElementById(tileId);
+        activeCell.style.backgroundColor = "dimgrey";
+
         return;
       }
 
@@ -815,6 +1102,9 @@ var GamePlay = React.createClass({
           playerState: "swapTileDestSelected",
           selectedDestTile: tileId
         });
+
+        var activeCell = document.getElementById(tileId);
+        activeCell.style.backgroundColor = "dimgrey";
 
         return;
       }
@@ -1117,6 +1407,12 @@ var GamePlay = React.createClass({
           cells[i].style.backgroundColor = "";
         }
 
+        cells = document.getElementsByClassName("TileCell");
+
+        for (var i=0,len=cells.length; i<len; i++) {
+          cells[i].style.backgroundColor = "";
+        }
+
         this.setState({
           playerState: "movedDetective1"
         });
@@ -1149,6 +1445,12 @@ var GamePlay = React.createClass({
 
       if (this.state.playerState != "movedDetective2") {
         var cells = document.getElementsByClassName("DetectiveCell");
+
+        for (var i=0,len=cells.length; i<len; i++) {
+          cells[i].style.backgroundColor = "";
+        }
+
+        cells = document.getElementsByClassName("TileCell");
 
         for (var i=0,len=cells.length; i<len; i++) {
           cells[i].style.backgroundColor = "";
@@ -1191,6 +1493,12 @@ var GamePlay = React.createClass({
           cells[i].style.backgroundColor = "";
         }
 
+        cells = document.getElementsByClassName("TileCell");
+
+        for (var i=0,len=cells.length; i<len; i++) {
+          cells[i].style.backgroundColor = "";
+        }
+
         this.setState({
           playerState: "swapTile"
         });
@@ -1213,6 +1521,12 @@ var GamePlay = React.createClass({
           cells[i].style.backgroundColor = "";
         }
 
+        cells = document.getElementsByClassName("TileCell");
+
+        for (var i=0,len=cells.length; i<len; i++) {
+          cells[i].style.backgroundColor = "";
+        }
+
         this.setState({
           playerState: "rotateTile"
         });
@@ -1229,17 +1543,27 @@ var GamePlay = React.createClass({
       {
         // Apply player action
         // Rotate action
-        if (this.state.playerState === "rotateTileSelected") {
+        
+        if (this.state.playerState === "rotateTile") {
+          alert("Please select a tile to rotate.");
+          return;
+        }
+        else if (this.state.playerState === "rotateTileSelected") {
           var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + this.state.selectedTile);
           tile.update({
             tile: this.state.selectedTileValue
           })
         }
-
         // Swap action
-        if (this.state.playerState === "swapTileSrcSelected") {
+        else if (this.state.playerState === "swapTile") {
+          alert("Please select an source and destination tiles to swap.");
+          return;
+        }
+        else if (this.state.playerState === "swapTileSrcSelected") {
           alert("Please select an destination tile to swap.");
-        } else if (this.state.playerState === "swapTileDestSelected") {
+          return;
+        } 
+        else if (this.state.playerState === "swapTileDestSelected") {
           var srcTile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + this.state.selectedTile);
           var destTile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + this.state.selectedDestTile);
           var srcTileValue = 0;
@@ -1267,9 +1591,23 @@ var GamePlay = React.createClass({
         }
 
         // Move detective action
-        if (this.state.playerState === "detectiveSelected") {
+        else if (this.state.playerState === "movedDetective1")
+        {
           alert("Please select the destination tile to move the detective.");
-        } else if (this.state.playerState === "detectiveDestSelected") {
+          return;
+        }
+        else if (this.state.playerState === "movedDetective2")
+        {
+          alert("Please select the destination tile to move the detective.");
+          return;
+        }
+        else if (this.state.playerState === "detectiveSelected") 
+        {
+          alert("Please select the destination tile to move the detective.");
+          return;
+        }
+        else if (this.state.playerState === "detectiveDestSelected") 
+        {
           var cells = document.getElementsByClassName("DetectiveCell");
           for (var i=0,len=cells.length; i<len; i++) {
             cells[i].style.backgroundColor = "";
@@ -1281,6 +1619,10 @@ var GamePlay = React.createClass({
           });
         }
         //////////
+
+        this.setState({
+          playerState: "selectAction"
+        });
 
         var game = firebase.database().ref('games/' + this.props.gameId);
         var variable = "None";
@@ -1367,21 +1709,21 @@ var GamePlay = React.createClass({
                     {this.addPlayer1Detective.bind(this, "1W")()}
                     {this.addPlayer2Detective.bind(this, "1W")()}
                   </td>
-                  <td className="TileCell">
-                    <img src={this.state.tile1x1} alt="logo" onClick={this.clickTile.bind(this, "1x1")}/>
-                    {this.resolveSuspectImg.bind(this, "1x1")()}
+                  <td id="1x1" className="TileCell">
+                    <img src={this.state.tile1x1} alt="logo" onClick={this.clickTile.bind(this, "1x1")} />
+                    <img src={this.state.suspect1x1} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "1x1")} />
                   </td>
-                  <td className="TileCell">
+                  <td id="1x2" className="TileCell">
                     <img src={this.state.tile1x2} alt="logo" onClick={this.clickTile.bind(this, "1x2")} />
-                    {this.resolveSuspectImg.bind(this, "1x2")()}
+                    <img src={this.state.suspect1x2} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "1x2")} />
                   </td>
-                  <td className="TileCell">
+                  <td id="1x3" className="TileCell">
                     <img src={this.state.tile1x3} alt="logo" onClick={this.clickTile.bind(this, "1x3")} />
-                    {this.resolveSuspectImg.bind(this, "1x3")()} 
+                    <img src={this.state.suspect1x3} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "1x3")} />
                   </td>
-                  <td className="TileCell">
+                  <td id="1x4" className="TileCell">
                     <img src={this.state.tile1x4} alt="logo" onClick={this.clickTile.bind(this, "1x4")} />
-                    {this.resolveSuspectImg.bind(this, "1x4")()}
+                    <img src={this.state.suspect1x4} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "1x4")} />
                   </td>
                   <td id="1E" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "1E")} >
                     {this.addPlayer1Detective.bind(this, "1E")()}
@@ -1393,21 +1735,21 @@ var GamePlay = React.createClass({
                     {this.addPlayer1Detective.bind(this, "2W")()}
                     {this.addPlayer2Detective.bind(this, "2W")()}
                   </td>
-                  <td className="TileCell">
+                  <td id="2x1" className="TileCell">
                     <img src={this.state.tile2x1} alt="logo" onClick={this.clickTile.bind(this, "2x1")} />
-                    {this.resolveSuspectImg.bind(this, "2x1")()}
+                    <img src={this.state.suspect2x1} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "2x1")} />
                   </td>
-                  <td className="TileCell">
+                  <td id="2x2" className="TileCell">
                     <img src={this.state.tile2x2} alt="logo" onClick={this.clickTile.bind(this, "2x2")} />
-                    {this.resolveSuspectImg.bind(this, "2x2")()}
+                    <img src={this.state.suspect2x2} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "2x2")} />
                   </td>
-                  <td className="TileCell">
+                  <td id="2x3" className="TileCell">
                     <img src={this.state.tile2x3} alt="logo" onClick={this.clickTile.bind(this, "2x3")} />
-                    {this.resolveSuspectImg.bind(this, "2x3")()}
+                    <img src={this.state.suspect2x3} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "2x3")} />
                   </td>
-                  <td className="TileCell">
+                  <td id="2x4" className="TileCell">
                     <img src={this.state.tile2x4} alt="logo" onClick={this.clickTile.bind(this, "2x4")} />
-                    {this.resolveSuspectImg.bind(this, "2x4")()}
+                    <img src={this.state.suspect2x4} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "2x4")} />
                   </td>
                   <td id="2E" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "2E")} >
                     {this.addPlayer1Detective.bind(this, "2E")()}
@@ -1419,21 +1761,21 @@ var GamePlay = React.createClass({
                     {this.addPlayer1Detective.bind(this, "3W")()}
                     {this.addPlayer2Detective.bind(this, "3W")()}
                   </td>
-                  <td className="TileCell">
+                  <td id="3x1" className="TileCell">
                     <img src={this.state.tile3x1} alt="logo" onClick={this.clickTile.bind(this, "3x1")} />
-                    {this.resolveSuspectImg.bind(this, "3x1")()}
+                    <img src={this.state.suspect3x1} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "3x1")} />
                   </td>
-                  <td className="TileCell">
+                  <td id="3x2" className="TileCell">
                     <img src={this.state.tile3x2} alt="logo" onClick={this.clickTile.bind(this, "3x2")} />
-                    {this.resolveSuspectImg.bind(this, "3x2")()}
+                    <img src={this.state.suspect3x2} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "3x2")} />
                   </td>
-                  <td className="TileCell">
+                  <td id="3x3" className="TileCell">
                     <img src={this.state.tile3x3} alt="logo" onClick={this.clickTile.bind(this, "3x3")} />
-                    {this.resolveSuspectImg.bind(this, "3x3")()}
+                    <img src={this.state.suspect3x3} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "3x3")} />
                   </td>
                   <td id="3x4" className="TileCell">
                     <img src={this.state.tile3x4} alt="logo" onClick={this.clickTile.bind(this, "3x4")} />
-                    {this.resolveSuspectImg.bind(this, "3x4")()}
+                    <img src={this.state.suspect3x4} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "3x4")} />
                   </td>
                   <td id="3E" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "3E")} >
                     {this.addPlayer1Detective.bind(this, "3E")()}
@@ -1445,21 +1787,21 @@ var GamePlay = React.createClass({
                     {this.addPlayer1Detective.bind(this, "4W")()}
                     {this.addPlayer2Detective.bind(this, "4W")()}
                   </td>
-                  <td className="TileCell">
+                  <td id="4x1" className="TileCell">
                     <img src={this.state.tile4x1} alt="logo" onClick={this.clickTile.bind(this, "4x1")} />
-                    {this.resolveSuspectImg.bind(this, "4x1")()}
+                    <img src={this.state.suspect4x1} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "4x1")} />
                   </td>
-                  <td className="TileCell">
+                  <td id="4x2" className="TileCell">
                     <img src={this.state.tile4x2} alt="logo" onClick={this.clickTile.bind(this, "4x2")} />
-                    {this.resolveSuspectImg.bind(this, "4x2")()}
+                    <img src={this.state.suspect4x2} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "4x2")} />
                   </td>
-                  <td className="TileCell">
+                  <td id="4x3" className="TileCell">
                     <img src={this.state.tile4x3} alt="logo" onClick={this.clickTile.bind(this, "4x3")} />
-                    {this.resolveSuspectImg.bind(this, "4x3")()}
+                    <img src={this.state.suspect4x3} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "4x3")} />
                   </td>
-                  <td className="TileCell">
+                  <td id="4x4" className="TileCell">
                     <img src={this.state.tile4x4} alt="logo" onClick={this.clickTile.bind(this, "4x4")} />
-                    {this.resolveSuspectImg.bind(this, "4x4")()}
+                    <img src={this.state.suspect4x4} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "4x4")} />
                   </td>
                   <td id="4E" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "4E")} >
                     {this.addPlayer1Detective.bind(this, "4E")()}
@@ -1522,6 +1864,7 @@ var GamePlay = React.createClass({
                 </tr>
               </table>
               <input type="button" value="Apply Action" className="action-button" onClick={this.applyAction} />
+              <input type="button" value="Reset" className="reset-button" onClick={this.resetSelectedTiles} />
               <table className="TurnTable">
                 <tr>
                   <td className="TurnCell">
