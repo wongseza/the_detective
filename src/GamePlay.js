@@ -957,6 +957,10 @@ var GamePlay = React.createClass({
   },
 
   resetSelectedTiles: function(){
+    var key = "tile" + this.state.selectedTile;
+    this.setState({
+      [key] : this.state.selectedTileCurValue
+    });
     if (this.state.whoTurn === this.props.playerId)
     {
       if (this.state.playerState === "rotateTileSelected") 
@@ -1549,6 +1553,33 @@ var GamePlay = React.createClass({
           return;
         }
         else if (this.state.playerState === "rotateTileSelected") {
+          switch (this.state.selectedTileCurValue)
+          {
+            case tileA:
+              if (this.state.selectedTileValue === "tileA") {
+                alert("Please rotate the tile.");
+                return;
+              }
+              break;
+            case tileB:
+              if (this.state.selectedTileValue === "tileB") {
+                alert("Please rotate the tile.");
+                return;
+              }
+              break;
+            case tileC:
+              if (this.state.selectedTileValue === "tileC") {
+                alert("Please rotate the tile.");
+                return;
+              }
+              break;
+            case tileD:
+              if (this.state.selectedTileValue === "tileD") {
+                alert("Please rotate the tile.");
+                return;
+              }
+              break;
+          }
           var tile = firebase.database().ref('games/'+ this.props.gameId + '/board/' + this.state.selectedTile);
           tile.update({
             tile: this.state.selectedTileValue
