@@ -60,8 +60,6 @@ var tileValueMapping = {
   "tileD" : tileD
 };
 
-var criminal = "";
-
 var tileGuid = {"tileA":{"E":{"next":true,"see":true},"N":{"next":false,"see":true},"S":{"next":false,"see":false},"W":{"next":true,"see":true}},"tileB":{"E":{"next":false,"see":true},"N":{"next":true,"see":true},"S":{"next":true,"see":true},"W":{"next":false,"see":false}},"tileC":{"E":{"next":true,"see":true},"N":{"next":false,"see":false},"S":{"next":false,"see":true},"W":{"next":true,"see":true}},"tileD":{"E":{"next":false,"see":false},"N":{"next":true,"see":true},"S":{"next":true,"see":true},"W":{"next":false,"see":true}}};
 
 var GamePlay = React.createClass({
@@ -1415,11 +1413,10 @@ var GamePlay = React.createClass({
       player2SuspectsRef.update({[shuffledSuspect]: ""});
     }
 
-    criminal = shuffledSuspects[Math.floor(Math.random() * 16)];
     var gamesRef = firebase.database().ref('games/'+ this.props.gameId);
     gamesRef.update({
       boardSize: 4,
-      criminal: criminal,
+      criminal: shuffledSuspects[Math.floor(Math.random() * 16)],
       numPlayer: 2,
       whoTurn: "player1",
       round: 1
@@ -1465,8 +1462,9 @@ var GamePlay = React.createClass({
 
   resolveDetective: function(playerID) {
     console.log("resolve detective called");
-    var listInTheLight = [];
+    
     firebase.database().ref('games/'+ this.props.gameId).once('value', function(snapshot) {
+      var listInTheLight = [];
       var detectives = [snapshot.child('players').child(playerID).child('detective1').val(),snapshot.child('players').child(playerID).child('detective2').val()];
         
       for (var dIndex = 0; dIndex < 2; dIndex++) {
@@ -1515,6 +1513,7 @@ var GamePlay = React.createClass({
       console.log (listInTheLight);
     
       // check dark or bright space
+      var criminal = snapshot.child('criminal').val();
       var IsCriminalInBright = (listInTheLight.indexOf(criminal) >= 0);
             
       console.log (criminal);
@@ -2098,7 +2097,8 @@ var GamePlay = React.createClass({
           </tr>
         </table>
         
-        <input type="button" onClick={this.resolveDetective} value="Test Resolve Detective" />
+        <input type="button" onClick={this.resolveDetective.bind(this, "player1")} value="Test Resolve Detective P1" />
+        <input type="button" onClick={this.resolveDetective.bind(this, "player2")} value="Test Resolve Detective P2" />
       </div>
     );
   }
