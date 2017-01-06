@@ -197,6 +197,7 @@ var GamePlay = React.createClass({
     var isAction3Avaliable = firebase.database().ref('games/'+ this.props.gameId + '/isAction3Avaliable');
     var isAction4Avaliable = firebase.database().ref('games/'+ this.props.gameId + '/isAction4Avaliable');
     var round = firebase.database().ref('games/'+ this.props.gameId + '/round');
+    var suspectList = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.playerId + '/suspects');
 
     if (this.props.playerId === "player1")
     {
@@ -215,6 +216,8 @@ var GamePlay = React.createClass({
         this.resetAction();
       }
     }.bind(this))
+
+    
 
     isAction1Avaliable.on('value', function(snapshot) {
       value = snapshot.val();
@@ -521,6 +524,174 @@ var GamePlay = React.createClass({
         document.getElementById("4x4").style.backgroundColor = "";
       });
     }.bind(this))
+
+    suspectList.on('value', function(snapshot) {
+      var key = Object.keys(snapshot.val());
+
+      if (this.state.suspect1x1 != undefined) {
+        var temp = '0' + this.state.suspect1x1.charAt(4) + this.state.suspect1x1.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect1x1 : "goodDog.png"
+          });
+        }
+      }
+      
+      if (this.state.suspect1x2 != undefined) {
+        var temp = '0' + this.state.suspect1x2.charAt(4) + this.state.suspect1x2.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect1x2 : "goodDog.png"
+          });
+        }
+      }
+
+      if (this.state.suspect1x3 != undefined) {
+        var temp = '0' + this.state.suspect1x3.charAt(4) + this.state.suspect1x3.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect1x3 : "goodDog.png"
+          });
+        }
+      }
+
+      if (this.state.suspect1x4 != undefined) {
+        var temp = '0' + this.state.suspect1x4.charAt(4) + this.state.suspect1x4.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect1x4 : "goodDog.png"
+          });
+        }
+      }
+
+      if (this.state.suspect2x1 != undefined) {
+        var temp = '0' + this.state.suspect2x1.charAt(4) + this.state.suspect2x1.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect2x1 : "goodDog.png"
+          });
+        }
+      }
+
+      if (this.state.suspect2x2 != undefined) {
+        var temp = '0' + this.state.suspect2x2.charAt(4) + this.state.suspect2x2.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect2x2 : "goodDog.png"
+          });
+        }
+      }
+
+      if (this.state.suspect2x3 != undefined) {
+        var temp = '0' + this.state.suspect2x3.charAt(4) + this.state.suspect2x3.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect2x3 : "goodDog.png"
+          });
+        }
+      }
+
+      if (this.state.suspect2x4 != undefined) {
+        var temp = '0' + this.state.suspect2x4.charAt(4) + this.state.suspect2x4.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect2x4 : "goodDog.png"
+          });
+        }
+      }
+
+      if (this.state.suspect3x1 != undefined) {
+        var temp = '0' + this.state.suspect3x1.charAt(4) + this.state.suspect3x1.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect3x1 : "goodDog.png"
+          });
+        }
+      }
+
+      if (this.state.suspect3x2 != undefined) {
+        var temp = '0' + this.state.suspect3x2.charAt(4) + this.state.suspect3x2.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect3x2 : "goodDog.png"
+          });
+        }
+      }
+
+      if (this.state.suspect3x3 != undefined) {
+        var temp = '0' + this.state.suspect3x3.charAt(4) + this.state.suspect3x3.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect3x3 : "goodDog.png"
+          });
+        }
+      }
+
+      if (this.state.suspect3x4 != undefined) {
+        var temp = '0' + this.state.suspect3x4.charAt(4) + this.state.suspect3x4.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect3x4 : "goodDog.png"
+          });
+        }
+      }
+
+      if (this.state.suspect4x1 != undefined) {
+        var temp = '0' + this.state.suspect4x1.charAt(4) + this.state.suspect4x1.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect4x1 : "goodDog.png"
+          });
+        }
+      }
+
+      if (this.state.suspect4x2 != undefined) {
+        var temp = '0' + this.state.suspect4x2.charAt(4) + this.state.suspect4x2.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect4x2 : "goodDog.png"
+          });
+        }
+      }
+
+      if (this.state.suspect4x3 != undefined) {
+        var temp = '0' + this.state.suspect4x3.charAt(4) + this.state.suspect4x3.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect4x3 : "goodDog.png"
+          });
+        }
+      }
+
+      if (this.state.suspect4x4 != undefined) {
+        var temp = '0' + this.state.suspect4x4.charAt(4) + this.state.suspect4x4.charAt(5);
+        
+        if (key.indexOf(temp) < 0) {
+          this.setState({
+            suspect4x4 : "goodDog.png"
+          });
+        }
+      }
+     
+      
+    }.bind(this))
+
+
 
     tile1x1.on('value', function(snapshot) {
       value = snapshot.val();
@@ -1293,8 +1464,9 @@ var GamePlay = React.createClass({
   },
 
   resolveDetective: function() {
+    console.log("resolve detective called");
     var listInTheLight = [];
-    firebase.database().ref('games/'+ this.props.gameId).on('value', function(snapshot) {
+    firebase.database().ref('games/'+ this.props.gameId).once('value', function(snapshot) {
       var detectives = [snapshot.child('players').child(this.props.playerId).child('detective1').val(),snapshot.child('players').child(this.props.playerId).child('detective2').val()];
         
       for (var dIndex = 0; dIndex < 2; dIndex++) {
@@ -1694,12 +1866,14 @@ var GamePlay = React.createClass({
 
               if(!value.isAction1Avaliable && !value.isAction2Avaliable && !value.isAction3Avaliable && !value.isAction4Avaliable)
               {
+                this.resolveDetective();
+
                 game.update({
                   round: value.round + 1
                 });
               }
-            });
-          });
+            }.bind(this))
+          }.bind(this))
         }
       }
     }
@@ -1742,7 +1916,7 @@ var GamePlay = React.createClass({
                   </td>
                   <td id="1x1" className="TileCell">
                     <img src={this.state.tile1x1} alt="logo" onClick={this.clickTile.bind(this, "1x1")} />
-                    <img src={this.state.suspect1x1} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "1x1")} />
+                    <img src={this.state.suspect1x1} className="Suspect-pos" onClick={this.clickTile.bind(this, "1x1")} />
                   </td>
                   <td id="1x2" className="TileCell">
                     <img src={this.state.tile1x2} alt="logo" onClick={this.clickTile.bind(this, "1x2")} />

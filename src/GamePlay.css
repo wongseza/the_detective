@@ -36,6 +36,7 @@ table {
   height: 60px;
   width: 60px;
   z-index: 2;
+  border-width: 0px;
 }
 
 .DetectiveCell {
