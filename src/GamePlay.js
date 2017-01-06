@@ -267,12 +267,10 @@ var GamePlay = React.createClass({
 
     whoTurn.on('value', function(snapshot) {
       var value = snapshot.val();
-      var turn = (this.props.playerId === value) ? "It's your turn!" : "It's your opponent's turn!";
-      var message = (this.props.playerId === value) ? "Please select an action." : "Please wait.";
+      var message = (this.props.playerId === value) ? "Your turn! Select an action." : "Your opponent's turn!";
       
       this.setState({
         whoTurn: value,
-        turn: turn,
         message: message
       });
 
@@ -301,23 +299,15 @@ var GamePlay = React.createClass({
           switch(value)
           {
             case 1:
-              this.setState({
-                message: "Move Detective 1 is selected."
-              });
-              break;
             case 2:
               this.setState({
-                message: "Move Detective 2 is selected."
+                message: "Select the detective."
               });
               break;
             case 3:
-              this.setState({
-                message: "Swap is selected."
-              });
-              break;
             case 4:
               this.setState({
-                message: "Rotate is selected."
+                message: "Select a source tile."
               });
               break;
           }
@@ -1385,6 +1375,7 @@ var GamePlay = React.createClass({
         });
 
         this.setState({
+          message: "Click again to rotate.",
           playerState: "rotateTileSelected",
           selectedTile: tileId,
           selectedTileValue: value,
@@ -1433,7 +1424,7 @@ var GamePlay = React.createClass({
       }
 
       // Keep rotate the same tile
-      if (this.state.whoTurn === this.props.playerId && this.state.playerState === "rotateTileSelected" && this.state.selectedTile === tileId) {
+      if (this.state.playerState === "rotateTileSelected" && this.state.selectedTile === tileId) {
         var newValue = 0;
         var newValue2 = tileA;
         var key = "tile" + tileId;
@@ -1479,6 +1470,7 @@ var GamePlay = React.createClass({
         });
 
         this.setState({
+          message: "Select a destination tile.",
           playerState: "swapTileSrcSelected",
           selectedTile: tileId
         });
@@ -1498,6 +1490,7 @@ var GamePlay = React.createClass({
         });
 
         this.setState({
+          message: "Click Apply",
           playerState: "swapTileDestSelected",
           selectedDestTile: tileId
         });
@@ -2104,6 +2097,54 @@ var GamePlay = React.createClass({
     }
   },
 
+  determinePlayerInfoClass: function() {
+    if (this.props.playerId === "player1") {
+      return "Player1Info";
+    } else {
+      return "Player2Info";
+    }
+  },
+
+  determineActionTableClass: function() {
+    if (this.props.playerId === "player1") {
+      return "ActionTable1";
+    } else {
+      return "ActionTable2";
+    }
+  },
+
+  determinePlayerCellClass: function() {
+    if (this.props.playerId === "player1") {
+      return "PlayerCell1";
+    } else {
+      return "PlayerCell2";
+    }
+  },
+
+  determineRoundCellClass: function() {
+    if (this.props.playerId === "player1") {
+      return "RoundCell1";
+    } else {
+      return "RoundCell2";
+    }
+  },
+
+  determineProfilePictureClass: function() {
+    if (this.props.playerId === "player1") {
+      return "ProfilePicture1";
+    } else {
+      return "ProfilePicture2";
+    }
+  },
+
+  determineApplyButton: function() {
+    if (this.props.playerId === "player1") {
+      return "ApplyButton1";
+    } else {
+      return "ApplyButton2";
+    }
+  },
+
   addPlayerInfoPicture: function() {
     if (this.props.playerId === "player1") {
       return (<img src={detectiveA} />);
@@ -2271,47 +2312,43 @@ var GamePlay = React.createClass({
                 </tr>
               </table>
             </td>
-            <td className={this.props.playerId}>
-              {this.addPlayerInfoPicture.bind(this)()}
+            <td className={this.determinePlayerInfoClass.bind(this)()}>
+              <div className={this.determineProfilePictureClass.bind(this)()}>
+                {this.addPlayerInfoPicture.bind(this)()}
+              </div>
               <table className="RoundTable">
-                <tr><td className="PlayerCell">
-                  {this.props.playerId} {this.props.userName}
-                </td></tr>
                 <tr>
-                  <td className="RoundCell">
-                    Round {this.state.round}
+                  <td className={this.determinePlayerCellClass.bind(this)()}>
+                    {this.props.playerId} {this.props.userName}
                   </td>
                 </tr>
-              </table>
-              <table className="ActionTable">
                 <tr>
-                  <td id="action1" className="ActionCell" onClick={this.clickMoveDetective1}>
+                  <div className={this.determineRoundCellClass.bind(this)()}>
+                    Round {this.state.round}
+                  </div>
+                </tr>
+              </table>
+              <table className={this.determineActionTableClass.bind(this)()}>
+                <tr>
+                  <td id="action1" className="ActionCell1" onClick={this.clickMoveDetective1}>
                     Move<br/><br/>
                     <img src={this.state.movedDetective1} alt="logo" />
                   </td>
-                  <td id="action2" className="ActionCell" onClick={this.clickMoveDetective2}>
+                  <td id="action2" className="ActionCell2" onClick={this.clickMoveDetective2}>
                     Move<br/><br/>
                     <img src={this.state.movedDetective2} alt="logo" />
                   </td>
                 </tr>
                 <tr>
-                  <td id="action3" className="ActionCell" onClick={this.clickSwap}>
+                  <td id="action3" className="ActionCell3" onClick={this.clickSwap}>
                     Swap
                   </td>
-                  <td id="action4" className="ActionCell" onClick={this.clickRotate}>
+                  <td id="action4" className="ActionCell4" onClick={this.clickRotate}>
                     Rotate
                   </td>
                 </tr>
               </table>
-              <input type="button" value="Apply Action" className="action-button" onClick={this.applyAction} />
-              <input type="button" value="Reset" className="reset-button" onClick={this.resetSelectedTiles} />
-              <table className="TurnTable">
-                <tr>
-                  <td className="TurnCell">
-                    {this.state.turn}
-                  </td>
-                </tr>
-              </table>
+              <input type="button" value="Apply" className={this.determineApplyButton.bind(this)()} onClick={this.applyAction} />
               <table className="MessageTable">
                 <tr>
                   <td className="MessageCell">

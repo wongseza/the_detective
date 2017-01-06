@@ -71,46 +71,113 @@ table {
   background-color: darkorange;
 }
 
-.player1 {
+.Player1Info {
   position: relative;
   padding: 0;
   margin: 0;
   border-width: 0px;
+  border-radius: 5px;
   background-color: red;
 }
 
-.player1 img{
-  position: relative;
-  height: 90px;
-  width: 90px;
-}
-
-.player2 {
+.Player2Info {
   position: relative;
   padding: 0;
   margin: 0;
   border-width: 0px;
+  border-radius: 5px;
   background-color: dodgerblue;
 }
 
-.player2 img{
-  position: relative;
-  height: 90px;
-  width: 90px;
-}
-
-.ActionTable {
+.ActionTable1 {
   margin: 20px;
-  background-color: white;
+  background-color: red;
 }
 
-.ActionCell {
+.ActionTable2 {
+  margin: 20px;
+  background-color: dodgerblue;
+}
+
+.ActionCell1 {
+  border-radius: 10px 30px 30px 30px;
   width: 120px;
   height: 120px;
   border: 1px solid lightgray;
+  background-color: white;
+  box-shadow: 5px 5px grey;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.ActionCell img {
+.ActionCell1:hover {
+  letter-spacing: 2px;
+  text-shadow: 1px 1px 3px red;
+}
+
+.ActionCell1 img {
+  height: 50px;
+  width: 50px;
+  z-index: 1;
+}
+
+.ActionCell2 {
+  border-radius: 30px 10px 30px 30px;
+  width: 120px;
+  height: 120px;
+  border: 1px solid lightgray;
+  background-color: white;
+  box-shadow: 5px 5px grey;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.ActionCell2:hover {
+  letter-spacing: 2px;
+  text-shadow: 1px 1px 3px red;
+}
+
+.ActionCell2 img {
+  height: 50px;
+  width: 50px;
+  z-index: 1;
+}
+
+.ActionCell3 {
+  border-radius: 30px 30px 30px 10px;
+  width: 120px;
+  height: 120px;
+  border: 1px solid lightgray;
+  background-color: white;
+  box-shadow: 5px 5px grey;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.ActionCell3:hover {
+  letter-spacing: 2px;
+  text-shadow: 1px 1px 3px red;
+}
+
+.ActionCell3 img {
+  height: 50px;
+  width: 50px;
+  z-index: 1;
+}
+
+.ActionCell4 {
+  border-radius: 30px 30px 10px 30px;
+  width: 120px;
+  height: 120px;
+  border: 1px solid lightgray;
+  background-color: white;
+  box-shadow: 5px 5px grey;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.ActionCell4:hover {
+  letter-spacing: 2px;
+  text-shadow: 1px 1px 3px red;
+}
+
+.ActionCell4 img {
   height: 50px;
   width: 50px;
   z-index: 1;
@@ -118,48 +185,156 @@ table {
 
 .MessageTable {
   margin: 20px;
+  position: relative;
+  bottom: 0;
 }
 
 .MessageCell {
   width: 240px;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   margin: auto;
-  background-color: lightsalmon;
+  background-color: whitesmoke;
   text-align: center;
-}
-
-.TurnTable {
-  margin: 20px;
-}
-
-.TurnCell {
-  width: 240px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  margin: auto;
-  background-color: lightgreen;
-  text-align: center;
+  border: 1px solid white;
+  border-radius: 3px;
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .RoundTable {
   margin: 20px;
 }
 
-.RoundCell {
-  width: 240px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  margin: auto;
-  background-color: khaki;
+.RoundCell1 {
+  background-color: red;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   text-align: center;
+  vertical-align: middle;
+  word-spacing: 10px;
+  letter-spacing: 3px;
+  color: floralwhite;
+  text-shadow: 2px 2px 4px #000000;
+  border-radius: 5px;
+  width: 200px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 15px;
+  margin: auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.PlayerCell {
+.RoundCell2 {
+  background-color: dodgerblue;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  text-align: center;
+  vertical-align: middle;
+  word-spacing: 10px;
+  letter-spacing: 3px;
+  color: floralwhite;
+  text-shadow: 2px 2px 4px #000000;
+  border-radius: 5px;
+  width: 200px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 15px;
+  margin: auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.PlayerCell1 {
   width: 240px;
-  padding-top: 20px;
   padding-bottom: 20px;
   margin: auto;
-  background-color: lightpink;
+  background-color: red;
   text-align: center;
+  text-shadow: 1px 1px 3px white;
+  color: red;
+  letter-spacing: 3px;
+  word-spacing: 5px;
+  font-size: 25px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.PlayerCell2 {
+  width: 240px;
+  padding-bottom: 20px;
+  margin: auto;
+  background-color: dodgerblue;
+  text-align: center;
+  text-shadow: 1px 1px 3px white;
+  color: dodgerblue;
+  letter-spacing: 3px;
+  word-spacing: 5px;
+  font-size: 25px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.ProfilePicture1 {
+  width: 160px;
+  margin: auto;
+  background-color: red;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 6px 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 5px;
+}
+
+.ProfilePicture1 img {
+  height: 90px;
+  width: 90px;
+}
+
+.ProfilePicture2 {
+  width: 160px;
+  margin: auto;
+  background-color: dodgerblue;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 6px 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 5px;
+}
+
+.ProfilePicture2 img {
+  height: 90px;
+  width: 90px;
+}
+
+.ApplyButton1 {
+  background-color: red;
+  color: floralwhite;
+  border: 2px solid red;
+  border-radius: 5px;
+  letter-spacing: 2px;
+  font-size: 20px;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2), 6px 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 50%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.ApplyButton1:hover {
+  background-color: floralwhite;
+  color: red;
+  border: 2px solid red;
+  letter-spacing: 3px;
+}
+
+.ApplyButton2 {
+  background-color: dodgerblue;
+  color: floralwhite;
+  border: 2px solid dodgerblue;
+  border-radius: 5px;
+  letter-spacing: 2px;
+  font-size: 20px;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2), 6px 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 50%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.ApplyButton2:hover {
+  background-color: floralwhite;
+  color: dodgerblue;
+  border: 2px solid dodgerblue;
+  border-radius: 5px;
+  letter-spacing: 3px;
+  font-size: 20px;
 }
