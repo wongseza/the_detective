@@ -31,10 +31,10 @@ table {
 
 .TileCell .Suspect-pos {
   position: absolute;
-  top: 40px;
-  left: 40px;
-  height: 40px;
-  width: 40px;
+  top: 30px;
+  left: 30px;
+  height: 60px;
+  width: 60px;
   z-index: 2;
 }
 
@@ -53,10 +53,10 @@ table {
 
 .DetectiveCell img {
   position: absolute;
-  top: 40px;
-  left: 40px;
-  height: 40px;
-  width: 40px;
+  top: 20px;
+  left: 20px;
+  height: 80px;
+  width: 80px;
   z-index: 1;
 }
 
