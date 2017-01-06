@@ -204,7 +204,7 @@ var GamePlay = React.createClass({
     }
 
     round.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       this.setState({
         round: value
       });
@@ -218,7 +218,7 @@ var GamePlay = React.createClass({
     
 
     isAction1Avaliable.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       this.setState({
         isAction1Avaliable: value
       }, function() {
@@ -230,7 +230,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     isAction2Avaliable.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       this.setState({
         isAction2Avaliable: value
       }, function() {
@@ -242,7 +242,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     isAction3Avaliable.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       this.setState({
         isAction3Avaliable: value
       }, function() {
@@ -254,7 +254,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     isAction4Avaliable.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       this.setState({
         isAction4Avaliable: value
       }, function() {
@@ -279,21 +279,21 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     movedDetective1.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       this.setState({
         movedDetective1: (value === 0) ? detectiveA : detectiveB
       });
     }.bind(this))
 
     movedDetective2.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       this.setState({
         movedDetective2: (value === 0) ? detectiveC : detectiveD
       });
     }.bind(this))
 
     selectedAction.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       if (value !== 0) {
         this.setState({
           selectedAction: value
@@ -377,176 +377,370 @@ var GamePlay = React.createClass({
       }
     }.bind(this))
 
-    var value = 0;
+    var key = ['001', '002', '003', '004', '005', '006', '007', '008', '009', '010', 
+               '011', '012', '013', '014', '015', '016'];
 
     suspect1x1.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect1x1 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect1x1 != undefined) {
+        if (key.indexOf(value) < 0) {
+          console.log("");
+          this.setState({
+            suspect1x1 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect1x1: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("1x1").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect1x1: "Dog" + value + ".png"
+        suspect1x1: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("1x1").style.backgroundColor = "";
+        document.getElementById("1x1").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect1x2.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect1x2 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect1x2 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect1x2 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect1x2: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("1x2").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect1x2: "Dog" + value + ".png"
+        suspect1x2: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("1x2").style.backgroundColor = "";
+        document.getElementById("1x2").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect1x3.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect1x3 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect1x3 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect1x3 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect1x3: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("1x3").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect1x3: "Dog" + value + ".png"
+        suspect1x3: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("1x3").style.backgroundColor = "";
+        document.getElementById("1x3").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect1x4.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect1x4 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect1x4 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect1x4 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect1x4: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("1x4").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect1x4: "Dog" + value + ".png"
+        suspect1x4: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("1x4").style.backgroundColor = "";
+        document.getElementById("1x4").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect2x1.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect2x1 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect2x1 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect2x1 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect2x1: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("2x1").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect2x1: "Dog" + value + ".png"
+        suspect2x1: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("2x1").style.backgroundColor = "";
+        document.getElementById("2x1").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect2x2.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect2x2 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect2x2 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect2x2 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect2x2: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("2x2").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect2x2: "Dog" + value + ".png"
+        suspect2x2: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("2x2").style.backgroundColor = "";
+        document.getElementById("2x2").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect2x3.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect2x3 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect2x3 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect2x3 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect2x3: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("2x3").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect2x3: "Dog" + value + ".png"
+        suspect2x3: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("2x3").style.backgroundColor = "";
+        document.getElementById("2x3").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect2x4.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect2x4 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect2x4 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect2x4 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect2x4: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("2x4").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect2x4: "Dog" + value + ".png"
+        suspect2x4: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("2x4").style.backgroundColor = "";
+        document.getElementById("2x4").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect3x1.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect3x1 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect3x1 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect3x1 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect3x1: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("3x1").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect3x1: "Dog" + value + ".png"
+        suspect3x1: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("3x1").style.backgroundColor = "";
+        document.getElementById("3x1").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect3x2.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect3x2 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect3x2 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect3x2 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect3x2: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("3x2").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect3x2: "Dog" + value + ".png"
+        suspect3x2: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("3x2").style.backgroundColor = "";
+        document.getElementById("3x2").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect3x3.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect3x3 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect3x3 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect3x3 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect3x3: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("3x3").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect3x3: "Dog" + value + ".png"
+        suspect3x3: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("3x3").style.backgroundColor = "";
+        document.getElementById("3x3").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect3x4.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect3x4 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect3x4 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect3x4 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect3x4: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("3x4").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect3x4: "Dog" + value + ".png"
+        suspect3x4: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("3x4").style.backgroundColor = "";
+        document.getElementById("3x4").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect4x1.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect4x1 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect4x1 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect4x1 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect4x1: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("4x1").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect4x1: "Dog" + value + ".png"
+        suspect4x1: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("4x1").style.backgroundColor = "";
+        document.getElementById("4x1").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect4x2.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect4x2 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect4x2 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect4x2 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect4x2: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("4x2").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect4x2: "Dog" + value + ".png"
+        suspect4x2: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("4x2").style.backgroundColor = "";
+        document.getElementById("4x2").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect4x3.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect4x3 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect4x3 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect4x3 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect4x3: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("4x3").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
-          suspect4x3: "Dog" + value + ".png"
+        suspect4x3: "Dog" + value + ".png"
         }, function(){
-          document.getElementById("4x3").style.backgroundColor = "";
+        document.getElementById("4x3").style.backgroundColor = "";
         });
       }
     }.bind(this))
 
     suspect4x4.on('value', function(snapshot){
-      value = snapshot.val();
-      if (this.state.suspect4x4 != "goodDog.png") {
+      var value = snapshot.val();
+      if (this.state.suspect4x4 != undefined) {
+        if (key.indexOf(value) < 0) {
+          this.setState({
+            suspect4x4 : "goodDog.png"
+          });
+        } else {
+          this.setState({
+            suspect4x4: "Dog" + value + ".png"
+          }, function(){
+            document.getElementById("4x4").style.backgroundColor = "";
+          });
+        }
+      } else {
         this.setState({
           suspect4x4: "Dog" + value + ".png"
         }, function(){
@@ -556,7 +750,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspectList.on('value', function(snapshot) {
-      var key = Object.keys(snapshot.val());
+      key = Object.keys(snapshot.val());
 
       if (this.state.suspect1x1 != undefined) {
         var temp = '0' + this.state.suspect1x1.charAt(4) + this.state.suspect1x1.charAt(5);
@@ -724,7 +918,7 @@ var GamePlay = React.createClass({
 
 
     tile1x1.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -748,7 +942,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile1x2.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -772,7 +966,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile1x3.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -796,7 +990,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile1x4.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -820,7 +1014,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile2x1.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -844,7 +1038,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile2x2.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -868,7 +1062,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile2x3.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -892,7 +1086,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile2x4.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -916,7 +1110,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile3x1.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -940,7 +1134,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile3x2.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -964,7 +1158,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile3x3.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -988,7 +1182,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile3x4.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1012,7 +1206,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile4x1.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1036,7 +1230,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile4x2.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1060,7 +1254,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile4x3.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1084,7 +1278,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile4x4.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1111,14 +1305,14 @@ var GamePlay = React.createClass({
     var player1Detective2 = firebase.database().ref('games/'+ this.props.gameId + '/players/player1/detective2');
 
     player1Detective1.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       this.setState({
         player1Detective1: value
       });
     }.bind(this))
 
     player1Detective2.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       this.setState({
         player1Detective2: value
       });
@@ -1128,14 +1322,14 @@ var GamePlay = React.createClass({
     var player2Detective2 = firebase.database().ref('games/'+ this.props.gameId + '/players/player2/detective2');
 
     player2Detective1.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       this.setState({
         player2Detective1: value
       });
     }.bind(this))
 
     player2Detective2.on('value', function(snapshot) {
-      value = snapshot.val();
+      var value = snapshot.val();
       this.setState({
         player2Detective2: value
       });
