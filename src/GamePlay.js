@@ -1511,46 +1511,45 @@ var GamePlay = React.createClass({
             break;
         };
       }
-    }.bind(this));
+      
+      console.log (listInTheLight);
     
-    this.sleep(1000);
-    console.log (listInTheLight);
-    
-    // check dark or bright space
-    var IsCriminalInBright = (listInTheLight.indexOf(criminal) >= 0);
-          
-    console.log (criminal);
-    console.log (IsCriminalInBright);   
-    
-    var suspects = ['001', '002', '003', '004', '005', '006', '007', '008', '009', '010', 
-                    '011', '012', '013', '014', '015', '016'];
-    
-    for (var index in suspects) {
-      var suspect = suspects[index];
-      if (IsCriminalInBright) {
-        if (listInTheLight.indexOf(suspect) < 0) {
-          console.log (suspect);
-          var suspectRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.playerId + '/suspects/' + suspect);
-          suspectRef.remove().then(function() {
-            console.log("Remove succeeded.")
-          })
-          .catch(function(error) {
-            console.log("Remove failed: " + error.message)
-          });
-        }
-      } else {
-        if (listInTheLight.indexOf(suspect) >= 0) {
-          console.log (suspect);
-          var suspectRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.playerId + '/suspects/' + suspect);
-          suspectRef.remove().then(function() {
-            console.log("Remove succeeded.")
-          })
-          .catch(function(error) {
-            console.log("Remove failed: " + error.message)
-          });
+      // check dark or bright space
+      var IsCriminalInBright = (listInTheLight.indexOf(criminal) >= 0);
+            
+      console.log (criminal);
+      console.log (IsCriminalInBright);   
+      
+      var suspects = ['001', '002', '003', '004', '005', '006', '007', '008', '009', '010', 
+                      '011', '012', '013', '014', '015', '016'];
+      
+      for (var index in suspects) {
+        var suspect = suspects[index];
+        if (IsCriminalInBright) {
+          if (listInTheLight.indexOf(suspect) < 0) {
+            console.log (suspect);
+            var suspectRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.playerId + '/suspects/' + suspect);
+            suspectRef.remove().then(function() {
+              console.log("Remove succeeded.")
+            })
+            .catch(function(error) {
+              console.log("Remove failed: " + error.message)
+            });
+          }
+        } else {
+          if (listInTheLight.indexOf(suspect) >= 0) {
+            console.log (suspect);
+            var suspectRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.playerId + '/suspects/' + suspect);
+            suspectRef.remove().then(function() {
+              console.log("Remove succeeded.")
+            })
+            .catch(function(error) {
+              console.log("Remove failed: " + error.message)
+            });
+          }
         }
       }
-    }
+    }.bind(this));
   },
 
   clickMoveDetective1: function(){
