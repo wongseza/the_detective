@@ -1463,11 +1463,11 @@ var GamePlay = React.createClass({
     // return suspectImgMap[susID];
   },
 
-  resolveDetective: function() {
+  resolveDetective: function(playerID) {
     console.log("resolve detective called");
     var listInTheLight = [];
     firebase.database().ref('games/'+ this.props.gameId).once('value', function(snapshot) {
-      var detectives = [snapshot.child('players').child(this.props.playerId).child('detective1').val(),snapshot.child('players').child(this.props.playerId).child('detective2').val()];
+      var detectives = [snapshot.child('players').child(playerID).child('detective1').val(),snapshot.child('players').child(playerID).child('detective2').val()];
         
       for (var dIndex = 0; dIndex < 2; dIndex++) {
         var position = detectives[dIndex].charAt(0);
@@ -1528,7 +1528,7 @@ var GamePlay = React.createClass({
         if (IsCriminalInBright) {
           if (listInTheLight.indexOf(suspect) < 0) {
             console.log (suspect);
-            var suspectRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.playerId + '/suspects/' + suspect);
+            var suspectRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + playerID + '/suspects/' + suspect);
             suspectRef.remove().then(function() {
               console.log("Remove succeeded.")
             })
@@ -1539,7 +1539,7 @@ var GamePlay = React.createClass({
         } else {
           if (listInTheLight.indexOf(suspect) >= 0) {
             console.log (suspect);
-            var suspectRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.playerId + '/suspects/' + suspect);
+            var suspectRef = firebase.database().ref('games/'+ this.props.gameId + '/players/' + playerID + '/suspects/' + suspect);
             suspectRef.remove().then(function() {
               console.log("Remove succeeded.")
             })
@@ -1865,7 +1865,8 @@ var GamePlay = React.createClass({
 
               if(!value.isAction1Avaliable && !value.isAction2Avaliable && !value.isAction3Avaliable && !value.isAction4Avaliable)
               {
-                this.resolveDetective();
+                this.resolveDetective("player1");
+                this.resolveDetective("player2");
 
                 game.update({
                   round: value.round + 1
