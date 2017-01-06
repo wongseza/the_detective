@@ -1879,6 +1879,15 @@ var GamePlay = React.createClass({
     }
   },
 
+  addPlayerInfoPicture: function() {
+    if (this.props.playerId === "player1") {
+      return (<img src={detectiveA} />);
+    }
+    else {
+      return (<img src={detectiveC} />);
+    }
+  },
+
   render: function() {
     console.log("=================== Render ===========================")
     return (
@@ -2037,7 +2046,8 @@ var GamePlay = React.createClass({
                 </tr>
               </table>
             </td>
-            <td className="PlayerInfo">
+            <td className={this.props.playerId}>
+              {this.addPlayerInfoPicture.bind(this)()}
               <table className="RoundTable">
                 <tr><td className="PlayerCell">
                   {this.props.playerId} {this.props.userName}
