@@ -2128,9 +2128,6 @@ var GamePlay = React.createClass({
             </td>
           </tr>
         </table>
-        
-        <input type="button" onClick={this.resolveDetective.bind(this, "player1")} value="Test Resolve Detective P1" />
-        <input type="button" onClick={this.resolveDetective.bind(this, "player2")} value="Test Resolve Detective P2" />
       </div>
     );
   }
