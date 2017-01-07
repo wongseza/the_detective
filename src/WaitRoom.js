@@ -124,7 +124,7 @@ var WaitRoom = React.createClass({
                 var playerID = this.state.playerIDList[i];
 
                 if (playerID === this.props.userId) { // current user, display button
-                    currentUser = this.state.emailList[i];
+                    currentUser = this.state.emailList[i].split("@")[0];
                     currentPlayerNum = i + 1;
                     
                     if (this.state.playerStatusList[i]) {   // ready

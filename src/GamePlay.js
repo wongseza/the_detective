@@ -10,6 +10,9 @@ import detectiveC from './DetectiveC.png';
 import detectiveD from './DetectiveD.png';
 import EndGame from './EndGame';
 import './GamePlay.css';
+import Swap from './Swap.png';
+import Rotate from './Rotate.png';
+
 
 var firebase = require("firebase");
 var config = {
@@ -1663,9 +1666,9 @@ var GamePlay = React.createClass({
   addPlayer1Detective: function(id) {
 
     if (this.state.player1Detective1 === id)
-      return (<img src={detectiveA} alt="logo" onClick={this.clickDetective.bind(this, id)} />);
+      return (<img src={detectiveA} alt="detectiveA" onClick={this.clickDetective.bind(this, id)} />);
     else if (this.state.player1Detective2 === id)
-      return (<img src={detectiveB} alt="logo" onClick={this.clickDetective.bind(this, id)} />);
+      return (<img src={detectiveB} alt="detectiveB" onClick={this.clickDetective.bind(this, id)} />);
     else
       return ("");
   },
@@ -1673,9 +1676,9 @@ var GamePlay = React.createClass({
   addPlayer2Detective: function(id) {
 
     if (this.state.player2Detective1 === id)
-      return (<img src={detectiveC} alt="logo" onClick={this.clickDetective.bind(this, id)} />);
+      return (<img src={detectiveC} alt="detectiveC" onClick={this.clickDetective.bind(this, id)} />);
     else if (this.state.player2Detective2 === id)
-      return (<img src={detectiveD} alt="logo" onClick={this.clickDetective.bind(this, id)} />);
+      return (<img src={detectiveD} alt="detectiveD" onClick={this.clickDetective.bind(this, id)} />);
     else
       return ("");
   },
@@ -1693,7 +1696,7 @@ var GamePlay = React.createClass({
     console.log("Resolve Suspect Img, tile " + tileLoc);
     var susID = tileSuspectMap[tileLoc];
     console.log("Resolve Suspect Img " + susID + " " + suspectImgMap[susID]);
-    return (<img src={suspectImgMap[susID]} className="Suspect-pos" alt="logo" />);
+    return (<img src={suspectImgMap[susID]} className="Suspect-pos" alt="suspectImgMap" />);
     // return suspectImgMap[susID];
   },
 
@@ -2208,20 +2211,20 @@ var GamePlay = React.createClass({
                     {this.addPlayer2Detective.bind(this, "1W")()}
                   </td>
                   <td id="1x1" className="TileCell">
-                    <img src={this.state.tile1x1} alt="logo" onClick={this.clickTile.bind(this, "1x1")} />
+                    <img src={this.state.tile1x1} onClick={this.clickTile.bind(this, "1x1")} />
                     <img src={this.state.suspect1x1} className="Suspect-pos" onClick={this.clickTile.bind(this, "1x1")} />
                   </td>
                   <td id="1x2" className="TileCell">
-                    <img src={this.state.tile1x2} alt="logo" onClick={this.clickTile.bind(this, "1x2")} />
-                    <img src={this.state.suspect1x2} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "1x2")} />
+                    <img src={this.state.tile1x2} onClick={this.clickTile.bind(this, "1x2")} />
+                    <img src={this.state.suspect1x2} className="Suspect-pos" onClick={this.clickTile.bind(this, "1x2")} />
                   </td>
                   <td id="1x3" className="TileCell">
-                    <img src={this.state.tile1x3} alt="logo" onClick={this.clickTile.bind(this, "1x3")} />
-                    <img src={this.state.suspect1x3} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "1x3")} />
+                    <img src={this.state.tile1x3} onClick={this.clickTile.bind(this, "1x3")} />
+                    <img src={this.state.suspect1x3} className="Suspect-pos" onClick={this.clickTile.bind(this, "1x3")} />
                   </td>
                   <td id="1x4" className="TileCell">
-                    <img src={this.state.tile1x4} alt="logo" onClick={this.clickTile.bind(this, "1x4")} />
-                    <img src={this.state.suspect1x4} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "1x4")} />
+                    <img src={this.state.tile1x4} onClick={this.clickTile.bind(this, "1x4")} />
+                    <img src={this.state.suspect1x4} className="Suspect-pos" onClick={this.clickTile.bind(this, "1x4")} />
                   </td>
                   <td id="1E" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "1E")} >
                     {this.addPlayer1Detective.bind(this, "1E")()}
@@ -2234,20 +2237,20 @@ var GamePlay = React.createClass({
                     {this.addPlayer2Detective.bind(this, "2W")()}
                   </td>
                   <td id="2x1" className="TileCell">
-                    <img src={this.state.tile2x1} alt="logo" onClick={this.clickTile.bind(this, "2x1")} />
-                    <img src={this.state.suspect2x1} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "2x1")} />
+                    <img src={this.state.tile2x1} onClick={this.clickTile.bind(this, "2x1")} />
+                    <img src={this.state.suspect2x1} className="Suspect-pos" onClick={this.clickTile.bind(this, "2x1")} />
                   </td>
                   <td id="2x2" className="TileCell">
-                    <img src={this.state.tile2x2} alt="logo" onClick={this.clickTile.bind(this, "2x2")} />
-                    <img src={this.state.suspect2x2} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "2x2")} />
+                    <img src={this.state.tile2x2} onClick={this.clickTile.bind(this, "2x2")} />
+                    <img src={this.state.suspect2x2} className="Suspect-pos" onClick={this.clickTile.bind(this, "2x2")} />
                   </td>
                   <td id="2x3" className="TileCell">
-                    <img src={this.state.tile2x3} alt="logo" onClick={this.clickTile.bind(this, "2x3")} />
-                    <img src={this.state.suspect2x3} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "2x3")} />
+                    <img src={this.state.tile2x3} onClick={this.clickTile.bind(this, "2x3")} />
+                    <img src={this.state.suspect2x3} className="Suspect-pos" onClick={this.clickTile.bind(this, "2x3")} />
                   </td>
                   <td id="2x4" className="TileCell">
-                    <img src={this.state.tile2x4} alt="logo" onClick={this.clickTile.bind(this, "2x4")} />
-                    <img src={this.state.suspect2x4} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "2x4")} />
+                    <img src={this.state.tile2x4} onClick={this.clickTile.bind(this, "2x4")} />
+                    <img src={this.state.suspect2x4} className="Suspect-pos" onClick={this.clickTile.bind(this, "2x4")} />
                   </td>
                   <td id="2E" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "2E")} >
                     {this.addPlayer1Detective.bind(this, "2E")()}
@@ -2260,20 +2263,20 @@ var GamePlay = React.createClass({
                     {this.addPlayer2Detective.bind(this, "3W")()}
                   </td>
                   <td id="3x1" className="TileCell">
-                    <img src={this.state.tile3x1} alt="logo" onClick={this.clickTile.bind(this, "3x1")} />
-                    <img src={this.state.suspect3x1} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "3x1")} />
+                    <img src={this.state.tile3x1} onClick={this.clickTile.bind(this, "3x1")} />
+                    <img src={this.state.suspect3x1} className="Suspect-pos" onClick={this.clickTile.bind(this, "3x1")} />
                   </td>
                   <td id="3x2" className="TileCell">
-                    <img src={this.state.tile3x2} alt="logo" onClick={this.clickTile.bind(this, "3x2")} />
-                    <img src={this.state.suspect3x2} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "3x2")} />
+                    <img src={this.state.tile3x2} onClick={this.clickTile.bind(this, "3x2")} />
+                    <img src={this.state.suspect3x2} className="Suspect-pos" onClick={this.clickTile.bind(this, "3x2")} />
                   </td>
                   <td id="3x3" className="TileCell">
-                    <img src={this.state.tile3x3} alt="logo" onClick={this.clickTile.bind(this, "3x3")} />
-                    <img src={this.state.suspect3x3} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "3x3")} />
+                    <img src={this.state.tile3x3} onClick={this.clickTile.bind(this, "3x3")} />
+                    <img src={this.state.suspect3x3} className="Suspect-pos" onClick={this.clickTile.bind(this, "3x3")} />
                   </td>
                   <td id="3x4" className="TileCell">
-                    <img src={this.state.tile3x4} alt="logo" onClick={this.clickTile.bind(this, "3x4")} />
-                    <img src={this.state.suspect3x4} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "3x4")} />
+                    <img src={this.state.tile3x4} onClick={this.clickTile.bind(this, "3x4")} />
+                    <img src={this.state.suspect3x4} className="Suspect-pos" onClick={this.clickTile.bind(this, "3x4")} />
                   </td>
                   <td id="3E" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "3E")} >
                     {this.addPlayer1Detective.bind(this, "3E")()}
@@ -2286,20 +2289,20 @@ var GamePlay = React.createClass({
                     {this.addPlayer2Detective.bind(this, "4W")()}
                   </td>
                   <td id="4x1" className="TileCell">
-                    <img src={this.state.tile4x1} alt="logo" onClick={this.clickTile.bind(this, "4x1")} />
-                    <img src={this.state.suspect4x1} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "4x1")} />
+                    <img src={this.state.tile4x1} onClick={this.clickTile.bind(this, "4x1")} />
+                    <img src={this.state.suspect4x1} className="Suspect-pos" onClick={this.clickTile.bind(this, "4x1")} />
                   </td>
                   <td id="4x2" className="TileCell">
-                    <img src={this.state.tile4x2} alt="logo" onClick={this.clickTile.bind(this, "4x2")} />
-                    <img src={this.state.suspect4x2} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "4x2")} />
+                    <img src={this.state.tile4x2} onClick={this.clickTile.bind(this, "4x2")} />
+                    <img src={this.state.suspect4x2} className="Suspect-pos" onClick={this.clickTile.bind(this, "4x2")} />
                   </td>
                   <td id="4x3" className="TileCell">
-                    <img src={this.state.tile4x3} alt="logo" onClick={this.clickTile.bind(this, "4x3")} />
-                    <img src={this.state.suspect4x3} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "4x3")} />
+                    <img src={this.state.tile4x3} onClick={this.clickTile.bind(this, "4x3")} />
+                    <img src={this.state.suspect4x3} className="Suspect-pos" onClick={this.clickTile.bind(this, "4x3")} />
                   </td>
                   <td id="4x4" className="TileCell">
-                    <img src={this.state.tile4x4} alt="logo" onClick={this.clickTile.bind(this, "4x4")} />
-                    <img src={this.state.suspect4x4} className="Suspect-pos" alt="logo" onClick={this.clickTile.bind(this, "4x4")} />
+                    <img src={this.state.tile4x4} onClick={this.clickTile.bind(this, "4x4")} />
+                    <img src={this.state.suspect4x4} className="Suspect-pos" onClick={this.clickTile.bind(this, "4x4")} />
                   </td>
                   <td id="4E" className="DetectiveCell" onClick={this.clickDetectiveCell.bind(this, "4E")} >
                     {this.addPlayer1Detective.bind(this, "4E")()}
@@ -2350,19 +2353,21 @@ var GamePlay = React.createClass({
                 <tr>
                   <td id="action1" className="ActionCell1" onClick={this.clickMoveDetective1}>
                     Move<br/><br/>
-                    <img src={this.state.movedDetective1} alt="logo" />
+                    <img src={this.state.movedDetective1} alt="Detective1" />
                   </td>
                   <td id="action2" className="ActionCell2" onClick={this.clickMoveDetective2}>
                     Move<br/><br/>
-                    <img src={this.state.movedDetective2} alt="logo" />
+                    <img src={this.state.movedDetective2} alt="Detective2" />
                   </td>
                 </tr>
                 <tr>
                   <td id="action3" className="ActionCell3" onClick={this.clickSwap}>
-                    Swap
+                    Swap<br/><br/>
+                    <img src={Swap} alt="Swap" />
                   </td>
                   <td id="action4" className="ActionCell4" onClick={this.clickRotate}>
-                    Rotate
+                    Rotate<br/><br/>
+                    <img src={Rotate} alt="Rotate" />
                   </td>
                 </tr>
               </table>
