@@ -380,19 +380,11 @@ var GamePlay = React.createClass({
 
     suspect1x1.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect1x1 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          console.log("");
-          this.setState({
-            suspect1x1 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect1x1: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("1x1").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect1x1 !== undefined && key.indexOf(value) < 0) {
+        console.log("");
+        this.setState({
+          suspect1x1 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect1x1: "Dog" + value + ".png"
@@ -404,18 +396,10 @@ var GamePlay = React.createClass({
 
     suspect1x2.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect1x2 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect1x2 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect1x2: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("1x2").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect1x2 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect1x2 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect1x2: "Dog" + value + ".png"
@@ -427,18 +411,10 @@ var GamePlay = React.createClass({
 
     suspect1x3.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect1x3 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect1x3 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect1x3: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("1x3").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect1x3 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect1x3 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect1x3: "Dog" + value + ".png"
@@ -450,18 +426,10 @@ var GamePlay = React.createClass({
 
     suspect1x4.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect1x4 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect1x4 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect1x4: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("1x4").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect1x4 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect1x4 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect1x4: "Dog" + value + ".png"
@@ -473,18 +441,10 @@ var GamePlay = React.createClass({
 
     suspect2x1.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect2x1 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect2x1 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect2x1: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("2x1").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect2x1 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect2x1 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect2x1: "Dog" + value + ".png"
@@ -496,18 +456,10 @@ var GamePlay = React.createClass({
 
     suspect2x2.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect2x2 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect2x2 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect2x2: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("2x2").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect2x2 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect2x2 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect2x2: "Dog" + value + ".png"
@@ -519,18 +471,10 @@ var GamePlay = React.createClass({
 
     suspect2x3.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect2x3 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect2x3 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect2x3: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("2x3").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect2x3 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect2x3 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect2x3: "Dog" + value + ".png"
@@ -542,18 +486,10 @@ var GamePlay = React.createClass({
 
     suspect2x4.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect2x4 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect2x4 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect2x4: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("2x4").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect2x4 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect2x4 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect2x4: "Dog" + value + ".png"
@@ -565,18 +501,10 @@ var GamePlay = React.createClass({
 
     suspect3x1.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect3x1 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect3x1 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect3x1: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("3x1").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect3x1 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect3x1 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect3x1: "Dog" + value + ".png"
@@ -588,18 +516,10 @@ var GamePlay = React.createClass({
 
     suspect3x2.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect3x2 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect3x2 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect3x2: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("3x2").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect3x2 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect3x2 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect3x2: "Dog" + value + ".png"
@@ -611,18 +531,10 @@ var GamePlay = React.createClass({
 
     suspect3x3.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect3x3 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect3x3 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect3x3: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("3x3").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect3x3 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect3x3 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect3x3: "Dog" + value + ".png"
@@ -634,18 +546,10 @@ var GamePlay = React.createClass({
 
     suspect3x4.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect3x4 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect3x4 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect3x4: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("3x4").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect3x4 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect3x4 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect3x4: "Dog" + value + ".png"
@@ -657,18 +561,10 @@ var GamePlay = React.createClass({
 
     suspect4x1.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect4x1 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect4x1 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect4x1: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("4x1").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect4x1 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect4x1 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect4x1: "Dog" + value + ".png"
@@ -680,18 +576,10 @@ var GamePlay = React.createClass({
 
     suspect4x2.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect4x2 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect4x2 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect4x2: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("4x2").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect4x2 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect4x2 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect4x2: "Dog" + value + ".png"
@@ -703,18 +591,10 @@ var GamePlay = React.createClass({
 
     suspect4x3.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect4x3 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect4x3 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect4x3: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("4x3").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect4x3 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect4x3 : "goodDog.png"
+        });
       } else {
         this.setState({
         suspect4x3: "Dog" + value + ".png"
@@ -726,18 +606,10 @@ var GamePlay = React.createClass({
 
     suspect4x4.on('value', function(snapshot){
       value = snapshot.val();
-      if (this.state.suspect4x4 !== undefined) {
-        if (key.indexOf(value) < 0) {
-          this.setState({
-            suspect4x4 : "goodDog.png"
-          });
-        } else {
-          this.setState({
-            suspect4x4: "Dog" + value + ".png"
-          }, function(){
-            document.getElementById("4x4").style.backgroundColor = "";
-          });
-        }
+      if (this.state.suspect4x4 !== undefined && key.indexOf(value) < 0) {
+        this.setState({
+          suspect4x4 : "goodDog.png"
+        });
       } else {
         this.setState({
           suspect4x4: "Dog" + value + ".png"
