@@ -2,12 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import logo from './logo.svg';
 import './App.css';
-import WaitRoom from './WaitRoom';
-import EndGame from './EndGame';
-import AppLogin from './AppLogin';
 import Lobby from './Lobby';
-import GamePlay from './GamePlay';
-import Action from './Action';
 
 var firebase = require("firebase");
 var config = {
@@ -19,117 +14,93 @@ var config = {
 };
 firebase.initializeApp(config);
 
-var usersRef = firebase.database().ref('users/');
-
-// Get a reference to the database service
-
-function writeData(userId, name, email) {
-  var usersRef = firebase.database().ref('users/' + userId);
-  usersRef.set({
-    username: name,
-    email: email,
-  });
-}
-
 var App = React.createClass({
-  getInitialState: function() {
-    return {
-      count: "loading...",
-      items: 0,
-      json: ""
-    };
-  },
 
-  componentWillMount: function() {
-    var currentTime = new Date();
-    var value = 0;
-    /*writeData('' + currentTime.getHours() + ' ' + currentTime.getMinutes() + ' ' + currentTime.getSeconds(), 'aaaa', 'bbbbb');*/
-
-    // usersRef = firebase.database().ref('users/');
-    usersRef.on('value', function(snapshot) {
-      value = snapshot.val();
-      this.setState({
-        count: Object.keys(value).length,
-        items: value,
-        json: JSON.stringify(value)
-      });
-    }.bind(this));
-  },
-
-  componentWillUnmount: function() {
-    console.log('Unmounting firebase "users/"');
-    usersRef.off();
-  },
-
-  clickButtonRemoveLast: function(e) {
-    var length = Object.keys(this.state.items).length;
-    var usersRef = firebase.database().ref('users/' + Object.keys(this.state.items)[length - 1]);
-    usersRef.remove();
-  },
-
-  clickWaitRoom: function(e) {
-    console.log('click button to wait room');
-    return ReactDOM.render(<WaitRoom userId="Z8q9ND5Vg0e7xswkiug7Z9ZHMc53" gameId="-KXzK8z50N7nbB3Ff4tZ"/>,document.getElementById('root'));
-  },
-
-  clickEndGame: function(e) {
-    console.log('click button to end game');
-    return ReactDOM.render(<EndGame userId='14 34 48' gameId="-KXzK8z50N7nbB3Ff4tZ" />,document.getElementById('root'));
+  clickButtonLogin: function(e) {
+    var auth = firebase.auth();
+    var usersRef;
+    
+    // Clear Old User State
+    var oldUser = auth.currentUser;
+    if (oldUser != null) {
+        var oldUid = oldUser.uid;
+        usersRef = firebase.database().ref('users/' + oldUid);
+        usersRef.remove();
+    }
+    
+    // Force signout
+    auth.signOut()
+    
+    // Get elements
+    var txtEmail = document.getElementById('txtEmail');
+    var txtPassword = document.getElementById('txtPassword');
+    
+    // Get email and password
+    var email = txtEmail.value;
+    var password = txtPassword.value;
+    
+    // Sign in
+    var promise = auth.signInWithEmailAndPassword(email, password);
+    promise.catch(e => alert(e.message));
+    
+    var user = auth.currentUser;
+    if (user != null) {
+        var uid = user.uid;
+        var displayName = user.displayName;
+        email = user.email;
+        usersRef = firebase.database().ref('users/' + uid);
+        usersRef.set({
+            username: displayName,
+            email: email,
+        });
+        ReactDOM.render(<Lobby userId={uid}/>, document.getElementById('root'))
+    }
+    
   },
   
-  clickToLogin: function(e) {
-    console.log('click button to log in page');
-    return ReactDOM.render(<AppLogin />,document.getElementById('root'));
-  },
-
-  clickLobby: function(e) {
-    console.log('click button to wait room');
-    return ReactDOM.render(<Lobby userId="16 37 4"/>,document.getElementById('root'));
-  },
-
-  clickGamePlay: function(e) {
-    console.log('click button to Game Play');
-    return ReactDOM.render(<GamePlay userId="14 34 48" gameId="-KWq-fZKpb-a4lLvug8T" playerId="player1" userName="Conan"/>,document.getElementById('root'));
-  },
-
-  clickAction: function(e) {
-    console.log('click button to Action');
-    return ReactDOM.render(<Action userId="14 34 48" gameId="-KWq-fZKpb-a4lLvug8T"/>,document.getElementById('root'));
-  },
-
-  clickGamePlay1: function(e) {
-    console.log('click button to Game Play');
-    return ReactDOM.render(<GamePlay userId="14 34 48" gameId="xxx" playerId="player1" userName="Conan"/>,document.getElementById('root'));
-  },
-
-  clickGamePlay2: function(e) {
-    console.log('click button to Game Play');
-    return ReactDOM.render(<GamePlay userId="14 34 48" gameId="xxx" playerId="player2" userName="Mouri"/>,document.getElementById('root'));
+  clickButtonSignup: function(e) {
+    // Get elements
+    var txtEmail = document.getElementById('txtEmail');
+    var txtPassword = document.getElementById('txtPassword');
+    
+    // Get email and password
+    var email = txtEmail.value;
+    var password = txtPassword.value;
+    var auth = firebase.auth();
+    // Sign in
+    var promise = auth.createUserWithEmailAndPassword(email, password);
+    promise.catch(e => alert(e.message));
+    this.clickButtonLogin();
   },
 
   render: function() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+        <div className="App">
+          <div className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h2>Welcome to The Detective</h2>
+          </div>
+          <div className="App">
+              <table className="App-login">
+                  <tr>
+                      <td className="App-login-header">Email : </td>
+                      <td><input id="txtEmail" type="email" placeholder="Email" /></td>
+                  </tr>
+                  <tr>
+                      <td className="App-login-header">Password : </td>
+                      <td><input id="txtPassword" type="password" placeholder="Password" /></td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                      <td>
+                          <input className="App-login-button" type="button" onClick={this.clickButtonLogin} value="Log in" />
+                          <input className="App-login-button" type="button" onClick={this.clickButtonSignup} value="Sign up" />
+                      </td>
+                  </tr>
+              </table>
+          </div>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.<br/>
-          User count: {this.state.count}<br/>
-          JSON: {this.state.json}
-        </p>
-        <input type="button" onClick={this.clickButtonRemoveLast} value="Remove last" />
-        <input type="button" onClick={this.clickWaitRoom} value="To WaitRoom" />
-        <input type="button" onClick={this.clickEndGame} value="To EndGame" />
-        <input type="button" onClick={this.clickToLogin} value="To Login" />
-        <input type="button" onClick={this.clickLobby} value="To Lobby" />
-        <input type="button" onClick={this.clickGamePlay} value="To GamePlay" />
-        <input type="button" onClick={this.clickAction} value="To Action" />
-        <input type="button" onClick={this.clickGamePlay1} value="To GamePlay (P1)" />
-        <input type="button" onClick={this.clickGamePlay2} value="To GamePlay (P2)" />
-      </div>
-    );
+        );
   }
 });
 

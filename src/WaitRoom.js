@@ -24,7 +24,7 @@ var allReady = false;
 var WaitRoom = React.createClass({
     getInitialState: function() {
         return {
-            buttonName: "Ready now, click to pending",
+            buttonName: "Ready",
             playerIDList: null,
             playerStatusList: null,
             emailList: null

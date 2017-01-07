@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import WaitRoom from './WaitRoom';
-import AppLogin from './AppLogin';
+import App from './App';
 
 var gamesRef;
 var ReactDOM = require('react-dom');
@@ -217,7 +217,7 @@ var Lobby = React.createClass({
 
   logOut: function() {
     firebase.auth().signOut().then(function() {
-      ReactDOM.render(<AppLogin />,document.getElementById('root'));
+      ReactDOM.render(<App />,document.getElementById('root'));
     }.bind(this), function(error) {});
   },
 
