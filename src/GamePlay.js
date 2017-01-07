@@ -1,13 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import tileA from './TileA.png';
 import tileB from './TileB.png';
 import tileC from './TileC.png';
 import tileD from './TileD.png';
-import suspectA from './SuspectA.png';
 import detectiveA from './DetectiveA.png';
 import detectiveB from './DetectiveB.png';
 import detectiveC from './DetectiveC.png';
 import detectiveD from './DetectiveD.png';
+import EndGame from './EndGame';
 import './GamePlay.css';
 
 var firebase = require("firebase");
@@ -196,7 +197,11 @@ var GamePlay = React.createClass({
     var isAction4Avaliable = firebase.database().ref('games/'+ this.props.gameId + '/isAction4Avaliable');
     var round = firebase.database().ref('games/'+ this.props.gameId + '/round');
     var suspectList = firebase.database().ref('games/'+ this.props.gameId + '/players/' + this.props.playerId + '/suspects');
+    var gameStatus = firebase.database().ref('games/'+ this.props.gameId + '/status');
 
+    var value = 0;
+    var temp = "";
+    
     if (this.props.playerId === "player1")
     {
       this.generateGameInfo();
@@ -204,7 +209,7 @@ var GamePlay = React.createClass({
     }
 
     round.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       this.setState({
         round: value
       });
@@ -218,7 +223,7 @@ var GamePlay = React.createClass({
     
 
     isAction1Avaliable.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       this.setState({
         isAction1Avaliable: value
       }, function() {
@@ -230,7 +235,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     isAction2Avaliable.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       this.setState({
         isAction2Avaliable: value
       }, function() {
@@ -242,7 +247,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     isAction3Avaliable.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       this.setState({
         isAction3Avaliable: value
       }, function() {
@@ -254,7 +259,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     isAction4Avaliable.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       this.setState({
         isAction4Avaliable: value
       }, function() {
@@ -266,7 +271,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     whoTurn.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var message = (this.props.playerId === value) ? "Your turn! Select an action." : "Your opponent's turn!";
       
       this.setState({
@@ -277,21 +282,21 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     movedDetective1.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       this.setState({
         movedDetective1: (value === 0) ? detectiveA : detectiveB
       });
     }.bind(this))
 
     movedDetective2.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       this.setState({
         movedDetective2: (value === 0) ? detectiveC : detectiveD
       });
     }.bind(this))
 
     selectedAction.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       if (value !== 0) {
         this.setState({
           selectedAction: value
@@ -371,8 +376,8 @@ var GamePlay = React.createClass({
                '011', '012', '013', '014', '015', '016'];
 
     suspect1x1.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect1x1 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect1x1 !== undefined) {
         if (key.indexOf(value) < 0) {
           console.log("");
           this.setState({
@@ -395,8 +400,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect1x2.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect1x2 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect1x2 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect1x2 : "goodDog.png"
@@ -418,8 +423,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect1x3.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect1x3 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect1x3 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect1x3 : "goodDog.png"
@@ -441,8 +446,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect1x4.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect1x4 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect1x4 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect1x4 : "goodDog.png"
@@ -464,8 +469,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect2x1.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect2x1 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect2x1 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect2x1 : "goodDog.png"
@@ -487,8 +492,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect2x2.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect2x2 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect2x2 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect2x2 : "goodDog.png"
@@ -510,8 +515,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect2x3.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect2x3 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect2x3 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect2x3 : "goodDog.png"
@@ -533,8 +538,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect2x4.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect2x4 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect2x4 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect2x4 : "goodDog.png"
@@ -556,8 +561,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect3x1.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect3x1 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect3x1 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect3x1 : "goodDog.png"
@@ -579,8 +584,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect3x2.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect3x2 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect3x2 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect3x2 : "goodDog.png"
@@ -602,8 +607,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect3x3.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect3x3 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect3x3 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect3x3 : "goodDog.png"
@@ -625,8 +630,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect3x4.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect3x4 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect3x4 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect3x4 : "goodDog.png"
@@ -648,8 +653,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect4x1.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect4x1 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect4x1 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect4x1 : "goodDog.png"
@@ -671,8 +676,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect4x2.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect4x2 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect4x2 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect4x2 : "goodDog.png"
@@ -694,8 +699,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect4x3.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect4x3 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect4x3 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect4x3 : "goodDog.png"
@@ -717,8 +722,8 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     suspect4x4.on('value', function(snapshot){
-      var value = snapshot.val();
-      if (this.state.suspect4x4 != undefined) {
+      value = snapshot.val();
+      if (this.state.suspect4x4 !== undefined) {
         if (key.indexOf(value) < 0) {
           this.setState({
             suspect4x4 : "goodDog.png"
@@ -738,12 +743,26 @@ var GamePlay = React.createClass({
         });
       }
     }.bind(this))
+    
+    gameStatus.on('value', function(snapshot) {
+        var status = snapshot.val();
+        if (status === "EndGame") {
+            return ReactDOM.render(<EndGame userId={this.props.userId} gameId={this.props.gameId}  playerId={this.props.playerId}/>,document.getElementById('root'));
+        }
+    }.bind(this))
 
     suspectList.on('value', function(snapshot) {
       key = Object.keys(snapshot.val());
+      
+      if (key.length === 1) {
+        var gamesRef = firebase.database().ref('games/'+ this.props.gameId);
+        gamesRef.update({
+          status: "EndGame"
+        });
+      }
 
-      if (this.state.suspect1x1 != undefined) {
-        var temp = '0' + this.state.suspect1x1.charAt(4) + this.state.suspect1x1.charAt(5);
+      if (this.state.suspect1x1 !== undefined) {
+        temp = '0' + this.state.suspect1x1.charAt(4) + this.state.suspect1x1.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -752,8 +771,8 @@ var GamePlay = React.createClass({
         }
       }
       
-      if (this.state.suspect1x2 != undefined) {
-        var temp = '0' + this.state.suspect1x2.charAt(4) + this.state.suspect1x2.charAt(5);
+      if (this.state.suspect1x2 !== undefined) {
+        temp = '0' + this.state.suspect1x2.charAt(4) + this.state.suspect1x2.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -762,8 +781,8 @@ var GamePlay = React.createClass({
         }
       }
 
-      if (this.state.suspect1x3 != undefined) {
-        var temp = '0' + this.state.suspect1x3.charAt(4) + this.state.suspect1x3.charAt(5);
+      if (this.state.suspect1x3 !== undefined) {
+        temp = '0' + this.state.suspect1x3.charAt(4) + this.state.suspect1x3.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -772,8 +791,8 @@ var GamePlay = React.createClass({
         }
       }
 
-      if (this.state.suspect1x4 != undefined) {
-        var temp = '0' + this.state.suspect1x4.charAt(4) + this.state.suspect1x4.charAt(5);
+      if (this.state.suspect1x4 !== undefined) {
+        temp = '0' + this.state.suspect1x4.charAt(4) + this.state.suspect1x4.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -782,8 +801,8 @@ var GamePlay = React.createClass({
         }
       }
 
-      if (this.state.suspect2x1 != undefined) {
-        var temp = '0' + this.state.suspect2x1.charAt(4) + this.state.suspect2x1.charAt(5);
+      if (this.state.suspect2x1 !== undefined) {
+        temp = '0' + this.state.suspect2x1.charAt(4) + this.state.suspect2x1.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -792,8 +811,8 @@ var GamePlay = React.createClass({
         }
       }
 
-      if (this.state.suspect2x2 != undefined) {
-        var temp = '0' + this.state.suspect2x2.charAt(4) + this.state.suspect2x2.charAt(5);
+      if (this.state.suspect2x2 !== undefined) {
+        temp = '0' + this.state.suspect2x2.charAt(4) + this.state.suspect2x2.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -802,8 +821,8 @@ var GamePlay = React.createClass({
         }
       }
 
-      if (this.state.suspect2x3 != undefined) {
-        var temp = '0' + this.state.suspect2x3.charAt(4) + this.state.suspect2x3.charAt(5);
+      if (this.state.suspect2x3 !== undefined) {
+        temp = '0' + this.state.suspect2x3.charAt(4) + this.state.suspect2x3.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -812,8 +831,8 @@ var GamePlay = React.createClass({
         }
       }
 
-      if (this.state.suspect2x4 != undefined) {
-        var temp = '0' + this.state.suspect2x4.charAt(4) + this.state.suspect2x4.charAt(5);
+      if (this.state.suspect2x4 !== undefined) {
+        temp = '0' + this.state.suspect2x4.charAt(4) + this.state.suspect2x4.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -822,8 +841,8 @@ var GamePlay = React.createClass({
         }
       }
 
-      if (this.state.suspect3x1 != undefined) {
-        var temp = '0' + this.state.suspect3x1.charAt(4) + this.state.suspect3x1.charAt(5);
+      if (this.state.suspect3x1 !== undefined) {
+        temp = '0' + this.state.suspect3x1.charAt(4) + this.state.suspect3x1.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -832,8 +851,8 @@ var GamePlay = React.createClass({
         }
       }
 
-      if (this.state.suspect3x2 != undefined) {
-        var temp = '0' + this.state.suspect3x2.charAt(4) + this.state.suspect3x2.charAt(5);
+      if (this.state.suspect3x2 !== undefined) {
+        temp = '0' + this.state.suspect3x2.charAt(4) + this.state.suspect3x2.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -842,8 +861,8 @@ var GamePlay = React.createClass({
         }
       }
 
-      if (this.state.suspect3x3 != undefined) {
-        var temp = '0' + this.state.suspect3x3.charAt(4) + this.state.suspect3x3.charAt(5);
+      if (this.state.suspect3x3 !== undefined) {
+        temp = '0' + this.state.suspect3x3.charAt(4) + this.state.suspect3x3.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -852,8 +871,8 @@ var GamePlay = React.createClass({
         }
       }
 
-      if (this.state.suspect3x4 != undefined) {
-        var temp = '0' + this.state.suspect3x4.charAt(4) + this.state.suspect3x4.charAt(5);
+      if (this.state.suspect3x4 !== undefined) {
+        temp = '0' + this.state.suspect3x4.charAt(4) + this.state.suspect3x4.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -862,8 +881,8 @@ var GamePlay = React.createClass({
         }
       }
 
-      if (this.state.suspect4x1 != undefined) {
-        var temp = '0' + this.state.suspect4x1.charAt(4) + this.state.suspect4x1.charAt(5);
+      if (this.state.suspect4x1 !== undefined) {
+        temp = '0' + this.state.suspect4x1.charAt(4) + this.state.suspect4x1.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -872,8 +891,8 @@ var GamePlay = React.createClass({
         }
       }
 
-      if (this.state.suspect4x2 != undefined) {
-        var temp = '0' + this.state.suspect4x2.charAt(4) + this.state.suspect4x2.charAt(5);
+      if (this.state.suspect4x2 !== undefined) {
+        temp = '0' + this.state.suspect4x2.charAt(4) + this.state.suspect4x2.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -882,8 +901,8 @@ var GamePlay = React.createClass({
         }
       }
 
-      if (this.state.suspect4x3 != undefined) {
-        var temp = '0' + this.state.suspect4x3.charAt(4) + this.state.suspect4x3.charAt(5);
+      if (this.state.suspect4x3 !== undefined) {
+        temp = '0' + this.state.suspect4x3.charAt(4) + this.state.suspect4x3.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -892,8 +911,8 @@ var GamePlay = React.createClass({
         }
       }
 
-      if (this.state.suspect4x4 != undefined) {
-        var temp = '0' + this.state.suspect4x4.charAt(4) + this.state.suspect4x4.charAt(5);
+      if (this.state.suspect4x4 !== undefined) {
+        temp = '0' + this.state.suspect4x4.charAt(4) + this.state.suspect4x4.charAt(5);
         
         if (key.indexOf(temp) < 0) {
           this.setState({
@@ -901,14 +920,12 @@ var GamePlay = React.createClass({
           });
         }
       }
-     
       
     }.bind(this))
 
-
-
+    
     tile1x1.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -932,7 +949,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile1x2.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -956,7 +973,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile1x3.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -980,7 +997,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile1x4.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1004,7 +1021,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile2x1.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1028,7 +1045,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile2x2.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1052,7 +1069,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile2x3.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1076,7 +1093,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile2x4.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1100,7 +1117,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile3x1.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1124,7 +1141,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile3x2.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1148,7 +1165,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile3x3.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1172,7 +1189,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile3x4.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1196,7 +1213,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile4x1.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1220,7 +1237,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile4x2.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1244,7 +1261,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile4x3.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1268,7 +1285,7 @@ var GamePlay = React.createClass({
     }.bind(this))
 
     tile4x4.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       var newState = {};
       switch (value) {
         case "tileA":
@@ -1295,14 +1312,14 @@ var GamePlay = React.createClass({
     var player1Detective2 = firebase.database().ref('games/'+ this.props.gameId + '/players/player1/detective2');
 
     player1Detective1.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       this.setState({
         player1Detective1: value
       });
     }.bind(this))
 
     player1Detective2.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       this.setState({
         player1Detective2: value
       });
@@ -1312,14 +1329,14 @@ var GamePlay = React.createClass({
     var player2Detective2 = firebase.database().ref('games/'+ this.props.gameId + '/players/player2/detective2');
 
     player2Detective1.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       this.setState({
         player2Detective1: value
       });
     }.bind(this))
 
     player2Detective2.on('value', function(snapshot) {
-      var value = snapshot.val();
+      value = snapshot.val();
       this.setState({
         player2Detective2: value
       });
@@ -1364,12 +1381,12 @@ var GamePlay = React.createClass({
   },
 
   clickTile: function(tileId) {
+    var value = 0;
     if (this.state.whoTurn === this.props.playerId) {
       // Select the tile to be rotated
       if (this.state.playerState === "rotateTile") {
         var tileValue = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId + '/tile');
-        var value = 0;
-
+        value = 0;
         tileValue.once('value', function(snapshot) {
           value = snapshot.val();
         });
@@ -1389,7 +1406,7 @@ var GamePlay = React.createClass({
       }
 
       // Change the tile to be rotated
-      if (this.state.playerState == "rotateTileSelected" && this.state.selectedTile != tileId) {
+      if (this.state.playerState === "rotateTileSelected" && this.state.selectedTile !== tileId) {
         // Reset the previous tile state
         var key = "tile" + this.state.selectedTile;
         var prevTileValue = this.state.selectedTileCurValue;
@@ -1400,7 +1417,7 @@ var GamePlay = React.createClass({
 
         // Keep the current tile state
         var tileValue = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId + '/tile');
-        var value = 0;
+        value = 0;
 
         tileValue.once('value', function(snapshot) {
           value = snapshot.val();
@@ -1481,7 +1498,7 @@ var GamePlay = React.createClass({
         return;
       }
 
-      if (this.state.playerState === "swapTileSrcSelected" && this.state.selectedTile != tileId) {
+      if (this.state.playerState === "swapTileSrcSelected" && this.state.selectedTile !== tileId) {
         var tileValue = firebase.database().ref('games/'+ this.props.gameId + '/board/' + tileId + '/tile');
         var value = 0;
 
@@ -1535,8 +1552,8 @@ var GamePlay = React.createClass({
         var loc = locations.split(",");
 
         for (var i=0,len=loc.length; i<len; i++) {
-          if (loc[i] != this.state.player1Detective1 && loc[i] != this.state.player1Detective2 &&
-            loc[i] != this.state.player2Detective1 && loc[i] != this.state.player2Detective2) {
+          if (loc[i] !== this.state.player1Detective1 && loc[i] !== this.state.player1Detective2 &&
+            loc[i] !== this.state.player2Detective1 && loc[i] !== this.state.player2Detective2) {
 
             var activeCell = document.getElementById(loc[i]);
             activeCell.style.backgroundColor = "lightgrey";
@@ -1638,7 +1655,8 @@ var GamePlay = React.createClass({
       criminal: shuffledSuspects[Math.floor(Math.random() * 16)],
       numPlayer: 2,
       whoTurn: "player1",
-      round: 1
+      round: 1,
+      status: "playing"
     });
   },
 
@@ -1773,7 +1791,7 @@ var GamePlay = React.createClass({
   clickMoveDetective1: function(){
     if (this.state.whoTurn === this.props.playerId && this.state.isAction1Avaliable)
     {
-      if (this.state.playerState != "selectAction") {
+      if (this.state.playerState !== "selectAction") {
         // Reset other state
         if (this.state.playerState === "rotateTileSelected") {
           var key = "tile" + this.state.selectedTile;
@@ -1793,7 +1811,7 @@ var GamePlay = React.createClass({
         selectedAction: 1
       });
 
-      if (this.state.playerState != "movedDetective1") {
+      if (this.state.playerState !== "movedDetective1") {
         var cells = document.getElementsByClassName("DetectiveCell");
 
         for (var i=0,len=cells.length; i<len; i++) {
@@ -1816,7 +1834,7 @@ var GamePlay = React.createClass({
   clickMoveDetective2: function(){
     if (this.state.whoTurn === this.props.playerId && this.state.isAction2Avaliable)
     {
-      if (this.state.playerState != "selectAction") {
+      if (this.state.playerState !== "selectAction") {
         // Reset other state
         if (this.state.playerState === "rotateTileSelected") {
           var key = "tile" + this.state.selectedTile;
@@ -1836,7 +1854,7 @@ var GamePlay = React.createClass({
         selectedAction: 2
       });
 
-      if (this.state.playerState != "movedDetective2") {
+      if (this.state.playerState !== "movedDetective2") {
         var cells = document.getElementsByClassName("DetectiveCell");
 
         for (var i=0,len=cells.length; i<len; i++) {
@@ -1859,7 +1877,7 @@ var GamePlay = React.createClass({
   clickSwap: function(){
     if (this.state.whoTurn === this.props.playerId && this.state.isAction3Avaliable)
     {
-      if (this.state.playerState != "selectAction") {
+      if (this.state.playerState !== "selectAction") {
         // Reset other state
         if (this.state.playerState === "rotateTileSelected") {
           var key = "tile" + this.state.selectedTile;
@@ -1879,7 +1897,7 @@ var GamePlay = React.createClass({
         selectedAction: 3
       });
 
-      if (this.state.playerState != "swapTile") {
+      if (this.state.playerState !== "swapTile") {
         var cells = document.getElementsByClassName("DetectiveCell");
 
         for (var i=0,len=cells.length; i<len; i++) {
@@ -1907,7 +1925,7 @@ var GamePlay = React.createClass({
         selectedAction: 4
       });
 
-      if (this.state.playerState != "rotateTile") {
+      if (this.state.playerState !== "rotateTile") {
         var cells = document.getElementsByClassName("DetectiveCell");
 
         for (var i=0,len=cells.length; i<len; i++) {
@@ -2061,7 +2079,7 @@ var GamePlay = React.createClass({
             variable = "isAction4Avaliable";
             break;
         }
-        if (variable != "None")
+        if (variable !== "None")
         {
           game.update({
             [variable]: false

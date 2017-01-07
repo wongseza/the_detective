@@ -1,7 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import winner from './winner.png';
-import loser from './logo.svg';
+import loser from './loser.png';
 import './App.css';
+import Lobby from './Lobby';
+    
 
 var firebase = require("firebase");
 var config = {
@@ -27,37 +30,15 @@ var EndGame = React.createClass({
   },
 
   componentWillMount: function() {
-    var currentTime = new Date();
-    var value = 0;
-    var value2 = 0;
-   
-    var player0 = firebase.database().ref('games/'+ this.props.gameId+'/players/player0/id');
-    var player1 = firebase.database().ref('games/'+ this.props.gameId+'/players/player1/id');
-    player0.once('value', function(snapshot) {
-      value = snapshot.val();
-      if (value === this.props.userId) {
-        var suspect0 = firebase.database().ref('games/'+ this.props.gameId+'/players/player0/suspect');
-        suspect0.once('value', function(snapshot2) {
-          value2 = snapshot2.numChildren();
-          if (value2 === 1) {
-            this.setState({
-              result: "win"
-            });
-          }
-        }.bind(this))
-        
-      } else {
-        var suspect1 = firebase.database().ref('games/'+ this.props.gameId+'/players/player1/suspect');
-        suspect1.once('value', function(snapshot2) {
-          value2 = snapshot2.numChildren();
-          if (value2 === 1) {
-            this.setState({
-              result: "win"
-            });
-          }
-        }.bind(this))
+    var suspectsRef = firebase.database().ref('games/'+ this.props.gameId+'/players/' + this.props.playerId + '/suspects');
+    suspectsRef.once('value', function(snapshot) {
+      var numSuspects = snapshot.numChildren();
+      if (numSuspects === 1) {
+        this.setState({
+          result: "win"
+        });
       }
-    }.bind(this));
+    }.bind(this))
   },
 
   componentWillUnmount: function() {
@@ -65,7 +46,7 @@ var EndGame = React.createClass({
   },
 
   clickButtonFinish: function(e) {
-    return window.location.href = '/index.html';
+    return ReactDOM.render(<Lobby userId={this.props.userId}/>, document.getElementById('root'))
   },
 
   render: function() {
@@ -76,7 +57,7 @@ var EndGame = React.createClass({
             <img src={winner} className="EndGame-logo" alt="logo" />
             <h2>End game la na</h2>
           </div>
-          <input type="button" onClick={this.clickButtonFinish} value="Finish" />
+          <input type="button" onClick={this.clickButtonFinish} value="Back" />
         </div>
       );
     } else {
@@ -86,7 +67,7 @@ var EndGame = React.createClass({
             <img src={loser} className="EndGame-logo" alt="logo" />
             <h2>End game la na</h2>
           </div>
-          <input type="button" onClick={this.clickButtonFinish} value="Finish" />
+          <input type="button" onClick={this.clickButtonFinish} value="Back" />
         </div>
       );
     }
