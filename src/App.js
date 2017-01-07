@@ -70,7 +70,15 @@ var App = React.createClass({
     // Sign in
     var promise = auth.createUserWithEmailAndPassword(email, password);
     promise.catch(e => alert(e.message));
-    this.clickButtonLogin();
+  },
+  
+  sleep: function(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+      if ((new Date().getTime() - start) > milliseconds){
+        break;
+        }
+      }
   },
 
   render: function() {
@@ -95,6 +103,13 @@ var App = React.createClass({
                       <td>
                           <input className="App-login-button" type="button" onClick={this.clickButtonLogin} value="Log in" />
                           <input className="App-login-button" type="button" onClick={this.clickButtonSignup} value="Sign up" />
+                      </td>
+                  </tr>
+                  <tr>
+                      <td className="App-login-note">
+                      - Enter email and password before click Log in or Sign up<br/>
+                      - Password should be at least 6 characters<br/>
+                      - If you have problem, please contact someone that know
                       </td>
                   </tr>
               </table>

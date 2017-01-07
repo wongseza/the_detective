@@ -1555,15 +1555,6 @@ var GamePlay = React.createClass({
       return ("");
   },
   
-  sleep: function(milliseconds) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-      if ((new Date().getTime() - start) > milliseconds){
-        break;
-        }
-      }
-  },
-  
   resolveSuspectImg: function(tileLoc) {
     console.log("Resolve Suspect Img, tile " + tileLoc);
     var susID = tileSuspectMap[tileLoc];
