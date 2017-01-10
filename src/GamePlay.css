@@ -46,6 +46,7 @@ table {
   border-width: 0px;
   height: 120px;
   width: 120px;
+  min-width: 120px;
 }
 
 /*.DetectiveCell:hover {
