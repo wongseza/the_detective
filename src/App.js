@@ -108,8 +108,7 @@ var App = React.createClass({
                   <tr>
                       <td className="App-login-note">
                       - Enter email and password before click Log in or Sign up<br/>
-                      - Password should be at least 6 characters<br/>
-                      - If you have problem, please contact someone that know
+                      - If you have problem, please contact someone who know
                       </td>
                   </tr>
               </table>
